@@ -110,7 +110,6 @@ export function ChatWindow(props) {
       return (
         <section>
           <p id="chatWindow">{ translateInSv() }</p>
-          <p id="yourUsrNameView2">{ props.sendUsrName }</p>
           <fieldset>
             <legend>Meddelanden</legend>
               <ScrollToBottom className="messagnesReceive">
@@ -120,7 +119,7 @@ export function ChatWindow(props) {
                     return (
                       <section className="messContainer" key={obj.id}>
                         <header className="messHeader">
-                          <p>{ obj.username }</p> <p>{ new Date(obj.timestamp ).toLocaleString('sv-SE') }</p>
+                          <p>{ obj.username }</p>
                         </header>
                         <div className="messContent" >
                           <Linkify>
