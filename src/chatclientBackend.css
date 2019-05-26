@@ -11,16 +11,52 @@ body {
   background-color: black;
   border-radius: 30px;
 }
+.button {
+  display: inline-block;
+  padding: 5px 19px;
+  font-size: 17px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
 /* Main app =======================================*/
 #header{
   padding-top: 5px;
   height: 50px;
   border-bottom: 3px solid orange;
 }
-#content{
+#mainContainer{
   justify-content: center;
   color: white;
-  height: 500px;
+  height: 450px;
+}
+#gotToRoomContainer{
+  position: absolute;
+  left: calc(50% - 200px);
+  top: calc(28%);
+  width: 400px;
+}
+#chooseRoom{
+  text-align: center;
+}
+#gotToRoom{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 /* Header =========================================*/
@@ -55,19 +91,14 @@ body {
   text-align: center;
 }
 #userContainer{
-  position: relative;
-  top: 168px;
-  left: calc(50% - 30%);
-  width: 60%;
-  display: flex;
-  justify-content: space-around;
+  position: absolute;
+  left: 332px;
+  top: 1px;
+  color: white;
 }
 #userName{
   width: 95px;
   position: relative;
-}
-#userContainer{
-  margin-left: 350px;
 }
 #usrStrView1{
   font-size: 18px;
@@ -91,10 +122,7 @@ body {
   height: 415px;
   border-radius: 30px;
   background-color: white;
-  color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  color: black;
 }
 aside{
   display: flex;
@@ -108,11 +136,34 @@ aside{
   color: black;
   margin-top: 0px;
 }
-#userList{
-
+#changeRoomContainer{
+  position: absolute;
+  left: 331px;
+  top: 26px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 200px;
 }
-
-
+#changeRoomHeadline{
+  text-align: center;
+  color: white;
+  margin-bottom: -10px;
+}
+#userList{
+  position: absolute;
+  left: 300px;
+  color: white;
+}
+#userList li{
+  list-style-type: none;
+}
+#userTyped{
+  width: 120px;
+  margin-left: -24px;
+  margin-bottom: 1px;
+}
 #yourUsrNameView2{
   position: absolute;
   top: 14px;

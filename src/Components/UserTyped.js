@@ -10,7 +10,7 @@ export function UserTyped() {
    }
   return (
     <section id="userList">
-      <ul>
+      <ul> <p id="userTyped">Dessa har skrivit</p>
         <li>grfeg</li>
         <li>grfeg</li>
         <li>grfeg</li>

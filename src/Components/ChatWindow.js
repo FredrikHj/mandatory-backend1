@@ -1,6 +1,6 @@
 
 // The ChatWindow ======================================================================================================
-import React, { useState, setState } from 'react';
+import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Linkify from 'react-linkify';
@@ -8,9 +8,26 @@ import Emojify from "react-emojione";
 
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { UserTyped } from './UserTyped.js';
+import { chatRoom$ } from './store';
 
 export function ChatWindow(props) {
-  
+  const [activeChatroom, setActiveChatroom ] = useState('');
+  const [ textInputNr, setTextInputNr ] = useState(0);
+
+  useEffect(() => {
+    let subscription = chatRoom$.subscribe((chatRoom) => { 
+      if (chatRoom) {
+        setActiveChatroom(chatRoom);
+      }
+    });
+  });
+  let translateInSv = () => {
+    let getSplittedChatName = activeChatroom.split('-');
+    console.log(getSplittedChatName);
+    return 'Chatrumm ' + getSplittedChatName[1];
+    
+  }
     /*     this.state = { messages: [], textInput: '', color: 'black'};
         this.messegnesAdd = this.messegnesAdd.bind(this);
         this.setYourMess = this.setYourMess.bind(this);
@@ -36,13 +53,13 @@ export function ChatWindow(props) {
       }
       messegnesAdd(chattMessObj) {
         this.setState({ messages: [...this.state.messages, chattMessObj] });
-      }
-      setYourMess(e) {
-        this.setState({ textInput: e.target.value });
+      } */
+      let setYourMess = (e) => {
+        setTextInputNr(e.target.value );
     
       }
-      messagnesSend() {
-        // Get both string needed for sending the mess and last reset both state and the textarea for the mess
+     let messagnesSend = () => {
+        /* // Get both string needed for sending the mess and last reset both state and the textarea for the mess
         let getUserName = document.querySelector('#yourUsrNameView2').textContent;
         let getMessStr = this.state.textInput;
         console.log(getMessStr);
@@ -58,17 +75,27 @@ export function ChatWindow(props) {
         this.setState({ textInput: '' });
         document.querySelector('#chatMessegnes').value = '';
         //this.componentDidMount();
-        console.log(this.state.messages);
+        console.log(this.state.messages); */
       }
-      letterCounter() {
-        let startValue = 0;
-        let getMessLength = this.state.textInput.length;
-        let getTotLeft = startValue+getMessLength;
-        let getCounter = document.querySelector('#totCounter');
-        return getTotLeft;
-      } */
-    
-     /*    let options = {
+      console.log(textInputNr);
+      
+        let letterCounter = () => {
+          if (textInputNr === 0) {
+            return 0;
+          }
+          else{ 
+            let startValue = 0;
+            let getMessLength = textInputNr.length;
+            
+            let getTotLeft = startValue+getMessLength;
+            console.log(getTotLeft);
+            
+            let getCounter = document.querySelector('#totCounter');
+            return getTotLeft;
+          }
+        } 
+
+        /*let options = {
           convertShortnames: true,
           convertUnicode: true,
           convertAscii: true,
@@ -82,7 +109,7 @@ export function ChatWindow(props) {
         }; */
       return (
         <section>
-          <p id="chatWindow">Chatmeddelanden</p>
+          <p id="chatWindow">{ translateInSv() }</p>
           <p id="yourUsrNameView2">{ props.sendUsrName }</p>
           <fieldset>
             <legend>Meddelanden</legend>
@@ -111,11 +138,34 @@ export function ChatWindow(props) {
               </ScrollToBottom>
               <hr className="middleLine"/>
           </fieldset>
-        {/*   <fieldset id="messagneSend">
+          <fieldset id="messagneSend">
             <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
-              <textarea id="chatMessegnes" maxLength="201" onChange={ this.setYourMess } required></textarea>
-              <div id="finishMess">  Använda tecken: <p id="totCounter" style={(this.state.textInput.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>{ this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
-          </fieldset> */}
+              <textarea id="chatMessegnes" maxLength="200" onChange={ setYourMess } required></textarea>
+              <div id="finishMess">  Använda tecken: <p id="totCounter" style={(setTextInputNr.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>
+              { letterCounter() } / 200 </p> <button id="sendBtn" onClick={ messagnesSend }> Sänd</button></div>
+          </fieldset>
+          <section id="changeRoomContainer">
+            <p id="changeRoomHeadline">Byt rumm</p>
+              <Link className="button" to="/Chatroom1">Rum 1</Link>
+              <Link className="button" to="/Chatroom2">Rum 2</Link>
+              <Link className="button" to="/Chatroom3">Rum 3</Link>
+          </section>
+        <UserContainer/>
+        <UserTyped/>
         </section>
       );
     }
+
+    //  UserName =====================================================================================================================
+function UserContainer() {
+  const [userName, setUserName ] = useState('');
+  function setYourUserName() {
+
+ }
+  return (
+    <section id="userContainer">
+      <label htmlFor="userName" id="userName">Användarnamn</label><br/>
+      <input type="text" id="userName" minLength="1" maxLength="12" onChange={ setYourUserName } defaultValue={ userName } required/>
+    </section>
+  );
+}

@@ -1,4 +1,4 @@
-import React, { useState, setState } from 'react';
+import React, { useState, useEffect } from 'react';
 //import './chatclient.css';
 // import io from 'socket.io-client';
 /* import ScrollToBottom from 'react-scroll-to-bottom';
@@ -10,9 +10,8 @@ import {Helmet} from "react-helmet";
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
-import { ChatWindow } from './Components/ChatWindow.js';
-import { UserTyped } from './Components/UserTyped.js';
-
+import { ChatRoom1, ChatRoom2, ChatRoom3 } from './Components/ChatRooms.js';
+import { chatRoom$ } from './Components/store';
 // The headerContent ============================================================================================================================
 function HeaderContent() {
   return (
@@ -28,71 +27,56 @@ function MainContent() {
 
   }
   return (
-    <section id="mainContentContainer">
-      <section>
-        <ChatWindow/>
-      </section>
+    <section>
+
       <aside>
-        <UserContainer/>
-        <UserTyped/>
+
       </aside>
     </section>
   );
 }
 
-//  UserName =====================================================================================================================
-function UserContainer() {
-  const [userName, setUserName ] = useState('');
-  function setYourUserName() {
-
- }
-  return (
-    <section id="userContainer">
-      <label htmlFor="userName" id="userName">Användarnamn</label><br/>
-      <input type="text" id="userName" minLength="1" maxLength="12" onChange={ setYourUserName } defaultValue={ userName } required/>
-    </section>
-  );
-}
-// ChatRoom =====================================================================================================================
-function ChatRoom() {
-  const [userName, setUserName ] = useState('');
-  function setYourUserName() {
-
- }
-  return (
-    <section id="chatRoom">
-      {/* <Link to="/">Rum 1</Link>
-      <Link to="/">Rum 2</Link>
-      <Link to="/">Rum 3</Link> */}
-    </section>
-  );
-}
 // MainApp =======================================================================================================================
 function MainApp() {
-  
-  if (this.state.redirect === true) return <Redirect to="/"/>;
+  const [chatroom, setChatroom ] = useState('');
+  const [userName, setUserName ] = useState('');
+  useEffect(() => {
+    let subscription = chatRoom$.subscribe((chatRoom) => { 
+      if (chatRoom) {
+        setChatroom(chatRoom);
+      }
+    });
+  });
+
+
+  function setYourUserName() {
+
+  }
+  //if (this.state.redirect === true) return <Redirect to="/"/>;
   return (
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Chatklient - Rum </title>
+          <title>{ 'Chatklient - Rum ' + chatroom } </title>
         </Helmet>
         <header id="header">
           <HeaderContent/>
         </header>
-        <main id="content">
-
-        <Router>
-          <ChatRoom/>
-          <Route exact path="/Rum1" component={MainPage} />
-          <Route exact path="/Rum2" component={MainPage} />
-          <Route exact path="/Rum3" component={MainPage} />
-        </Router>
-          <ChatRoom/>
-
-          <MainContent/>
+        <main id="mainContainer">
+          <Router>
+            <section id="gotToRoomContainer" style={(chatroom === '') ? {display: 'block'} : {display: 'none'}}>
+              <p id="chooseRoom">Välj rumm</p>
+              <section id="gotToRoom">
+                <Link className="button" to="/Chatroom1">Rum 1</Link>
+                <Link className="button" to="/Chatroom2">Rum 2</Link>
+                <Link className="button" to="/Chatroom3">Rum 3</Link>
+              </section>
+            </section>
+              <Route exact path="/Chatroom1" component={ ChatRoom1 } />
+              <Route exact path="/Chatroom2" component={ ChatRoom2 } />
+              <Route exact path="/Chatroom3" component={ ChatRoom3 } />
+            </Router>
         </main>
-
       </>
   );
 }

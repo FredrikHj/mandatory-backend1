@@ -8,7 +8,7 @@ const port = 3000;
 let movieList = require('./express_JSON_API-RestAPI.json');
 
 // Gets all movies =================================================
-app.get('/Movie', (req, res) => {    
+app.get('/', (req, res) => {    
     res.send(movieList);
 });
 // Gets a specific movis
