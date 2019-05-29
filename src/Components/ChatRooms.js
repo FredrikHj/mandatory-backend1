@@ -4,7 +4,7 @@ import React, { useState, setState } from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { ChatWindow } from './ChatWindow.js';
 import { updateChatRoom } from './store';
-export let ChatRoom1 = () => {
+export let ChatRoom = () => {
     updateChatRoom('chatRoom-1');
     return (
         <section id="mainContentContainer">
@@ -12,19 +12,3 @@ export let ChatRoom1 = () => {
         </section>
     );
 }
-  export let ChatRoom2 = () => {
-    updateChatRoom('chatRoom-2');
-    return (
-        <section id="mainContentContainer">
-            <ChatWindow/>
-        </section>
-    );
-  }
-  export let ChatRoom3 = () => {
-    updateChatRoom('chatRoom-3');
-    return (
-        <section id="mainContentContainer">
-            <ChatWindow/>
-        </section>
-    );
-  }

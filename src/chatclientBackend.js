@@ -10,7 +10,7 @@ import {Helmet} from "react-helmet";
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
-import { ChatRoom1, ChatRoom2, ChatRoom3 } from './Components/ChatRooms.js';
+import { ChatRoom } from './Components/ChatRooms.js';
 import { chatRoom$ } from './Components/store';
 // The headerContent ============================================================================================================================
 function HeaderContent() {
@@ -63,7 +63,8 @@ function MainApp() {
           <HeaderContent/>
         </header>
         <main id="mainContainer">
-          <Router>
+          <ChatRoom/>
+{/*           <Router>
             <section id="gotToRoomContainer" style={(chatroom === '') ? {display: 'block'} : {display: 'none'}}>
               <p id="chooseRoom">Välj rumm</p>
               <section id="gotToRoom">
@@ -75,7 +76,7 @@ function MainApp() {
               <Route exact path="/Chatroom1" component={ ChatRoom1 } />
               <Route exact path="/Chatroom2" component={ ChatRoom2 } />
               <Route exact path="/Chatroom3" component={ ChatRoom3 } />
-            </Router>
+            </Router> */}
         </main>
       </>
   );

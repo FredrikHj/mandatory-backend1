@@ -1,6 +1,6 @@
 
 // The ChatWindow ======================================================================================================
-import React, { useState, useEffect } from 'react';
+import React, { PureComponent } from 'react';
 import io from 'socket.io-client';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Linkify from 'react-linkify';
@@ -10,161 +10,182 @@ import Emojify from "react-emojione";
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { UserTyped } from './UserTyped.js';
 import { chatRoom$ } from './store';
+import { resolvePtr } from 'dns';
 
-export function ChatWindow(props) {
-  const [activeChatroom, setActiveChatroom ] = useState('');
-  const [ textInputNr, setTextInputNr ] = useState(0);
+export class ChatWindow extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      serverUrl: 'http://localhost:3001/',
+      usrName: '',
+      messStr: '',
+      incommingMess: [],
+      activeChatroom: '',
+    }
+    this.messegnesAdd = this.messegnesAdd.bind(this);
+  }
+  componentDidMount() { 
+    console.log('yt');
+    let messCount = 0;
 
-  useEffect(() => {
-    let subscription = chatRoom$.subscribe((chatRoom) => { 
-      if (chatRoom) {
-        setActiveChatroom(chatRoom);
+    // Listen on respponse from the chatserver
+    this.listen = io.connect(this.state.serverUrl);
+
+    this.listen.on('chatMess', res => {
+      console.log('Incomming chatMessegnes');
+      console.log(res);
+      
+          
+/*       let subscription = chatRoom$.subscribe((chatRoom) => { 
+        if (chatRoom) {
+          this.setState({
+            activeChatroom: '-',
+          });
+        }
+      }); */
+      for (let getChatMessObj of res.data) {
+
+        this.messegnesAdd(getChatMessObj);
       }
-    });
-  });
-  let translateInSv = () => {
-    let getSplittedChatName = activeChatroom.split('-');
-    console.log(getSplittedChatName);
+    });    
+  }
+  translateInSv = () => {
+    let getSplittedChatName = this.state.activeChatroom.split('-');
+    // console.log(getSplittedChatName);
     return 'Chatrumm ' + getSplittedChatName[1];
     
   }
-    /*     this.state = { messages: [], textInput: '', color: 'black'};
-        this.messegnesAdd = this.messegnesAdd.bind(this);
-        this.setYourMess = this.setYourMess.bind(this);
-        this.messagnesSend = this.messagnesSend.bind(this);
-        this.letterCounter = this.letterCounter.bind(this); */
-      //}
-      /* componentDidMount() {
-        this.listen = io('http://ec2-13-53-66-202.eu-north-1.compute.amazonaws.com:3000/');
+  
+  messegnesAdd(chatMessObj){
+    this.setState({
+      incommingMess: [...this.state.incommingMess, chatMessObj] 
+    });
+      /* listen.on('new_message', function(data) {
+      console.log(data);
+      this.messegnesAdd(data);
+    }); */
+    //listen.on('connect', function(){});
     
-        this.listen.on('messages', function(data) {
-          for (let getChatMessObj of data) {
-            this.messegnesAdd(getChatMessObj);
-          }
-        }.bind(this));
-        this.listen.on('new_message', function(data) {
-          console.log(data);
-          this.messegnesAdd(data);
-        }.bind(this));
-        this.listen.on('connect', function(){});
-      }
-      componentWillUnmount() {
-        listen.on('disconnect', function(){});
-      }
-      messegnesAdd(chattMessObj) {
-        this.setState({ messages: [...this.state.messages, chattMessObj] });
-      } */
-      let setYourMess = (e) => {
-        setTextInputNr(e.target.value );
     
-      }
-     let messagnesSend = () => {
-        /* // Get both string needed for sending the mess and last reset both state and the textarea for the mess
-        let getUserName = document.querySelector('#yourUsrNameView2').textContent;
-        let getMessStr = this.state.textInput;
-        console.log(getMessStr);
+  }
+  
+  
+  /*  componentWillUnmount() {
+    listen.on('disconnect', function(){});
+  }
+  messegnesAdd(chattMessObj) {
+    this.setState({ messages: [...this.state.messages, chattMessObj] });
+  } */
+  changeUsrName = (e) => {       
+    this.setState({
+      usrName: e.target.value,
+    })
+  }
+  changeMess = (e) => {       
+    this.setState({
+      messStr: e.target.value,
+    })
+  }
+  messagnesSend = () => {
+    let chatObj = {
+      usr: this.state.usrName,
+      chatMess: this.state.messStr,
+    }
+    console.log(chatObj);
     
-        let messBody = {
-            username: getUserName,
-            content: getMessStr
-        }
-    
-        this.listen.emit('message', messBody, (response) => {
-          this.messegnesAdd(response.data.newMessage);
-        });
-        this.setState({ textInput: '' });
-        document.querySelector('#chatMessegnes').value = '';
-        //this.componentDidMount();
-        console.log(this.state.messages); */
-      }
-      console.log(textInputNr);
+    this.listen.emit('chatMess', chatObj, (response) => {
+      console.log(response);
       
-        let letterCounter = () => {
-          if (textInputNr === 0) {
-            return 0;
-          }
-          else{ 
-            let startValue = 0;
-            let getMessLength = textInputNr.length;
-            
-            let getTotLeft = startValue+getMessLength;
-            console.log(getTotLeft);
-            
-            let getCounter = document.querySelector('#totCounter');
-            return getTotLeft;
-          }
-        } 
-
-        /*let options = {
-          convertShortnames: true,
-          convertUnicode: true,
-          convertAscii: true,
-          style: {
-            backgroundImage: 'url("/path/to/your/emojione.sprites.png")',
-            height: 32,
-            margin: 4,
-          },
-          // this click handler will be set on every emoji
-          onClick: event => alert(event.target.title)
-        }; */
-      return (
-        <section>
-          <p id="chatWindow">{ translateInSv() }</p>
-          <fieldset>
-            <legend>Meddelanden</legend>
-              <ScrollToBottom className="messagnesReceive">
-              <p>rtgtrg</p>
-              {/*   {
-                  this.state.messages.map(obj => {
-                    return (
-                      <section className="messContainer" key={obj.id}>
-                        <header className="messHeader">
-                          <p>{ obj.username }</p>
-                        </header>
-                        <div className="messContent" >
-                          <Linkify>
-                          <Emojify style={{height: 30, width: 30}}>
-                            { obj.content }
+      this.setState({
+        incommingMess: response,
+      });
+    });
+  }
+  
+  letterCounter = () => {
+    if (this.state.messStr === 0) {
+      return 0;
+    }
+    else{ 
+      let startValue = 0;
+      let getMessLength = this.state.messStr.length;
+      let getTotLeft = startValue+getMessLength;
+      let getCounter = document.querySelector('#totCounter');
+      return getTotLeft;
+    }
+  } 
+  render() {
+    let options = {
+      convertShortnames: true,
+      convertUnicode: true,
+      convertAscii: true,
+      style: {
+        backgroundImage: 'url("/path/to/your/emojione.sprites.png")',
+        height: 32,
+        margin: 4,
+      },
+      // this click handler will be set on every emoji
+      onClick: event => alert(event.target.title)
+    };
     
-                          </Emojify>
-                        </Linkify>
-                        </div>
-                        <hr className="middleLine"/>
-                      </section>
-                    );
-                  })
-                } */}
-              </ScrollToBottom>
-              <hr className="middleLine"/>
+    return (
+
+      <section>
+        <p id="chatWindow">{ this.translateInSv() }</p>
+        <fieldset>
+          <legend>Meddelanden</legend>
+            <ScrollToBottom className="messagnesReceive">
+              {
+                this.state.incommingMess.map(obj => {
+                  return (
+                    <section className="messContainer" key={'1'}>
+                    <header className="messHeader">
+                      <p>{ obj.usr }</p> 
+                    </header>
+                    <div className="messContent" >
+                      <Linkify>
+                        <Emojify style={{height: 30, width: 30}}>
+                          { obj.chatMess }
+
+                        </Emojify>
+                      </Linkify>
+                    </div>
+
+                    </section>
+
+                  );
+                })
+              }
+            </ScrollToBottom>
+            <hr className="middleLine"/>
           </fieldset>
           <fieldset id="messagneSend">
             <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
-              <textarea id="chatMessegnes" maxLength="200" onChange={ setYourMess } required></textarea>
-              <div id="finishMess">  Använda tecken: <p id="totCounter" style={(setTextInputNr.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>
-              { letterCounter() } / 200 </p> <button id="sendBtn" onClick={ messagnesSend }> Sänd</button></div>
+              <textarea id="chatMessegnes" maxLength="200" onChange={ this.changeMess } required></textarea>
+              <div id="finishMess">  Använda tecken: <p id="totCounter" style={(this.state.messStr.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>
+              { this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
           </fieldset>
           <section id="changeRoomContainer">
             <p id="changeRoomHeadline">Byt rumm</p>
-              <Link className="button" to="/Chatroom1">Rum 1</Link>
-              <Link className="button" to="/Chatroom2">Rum 2</Link>
-              <Link className="button" to="/Chatroom3">Rum 3</Link>
+
           </section>
-        <UserContainer/>
+        <UserContainer
+          changeUsrName={ this.changeUsrName }
+          stateUsrName={ this.state.usrName }
+        />
         <UserTyped/>
-        </section>
-      );
-    }
+      </section>
+    );
+  }
+}
 
     //  UserName =====================================================================================================================
-function UserContainer() {
-  const [userName, setUserName ] = useState('');
-  function setYourUserName() {
+function UserContainer(props) {
 
- }
   return (
     <section id="userContainer">
       <label htmlFor="userName" id="userName">Användarnamn</label><br/>
-      <input type="text" id="userName" minLength="1" maxLength="12" onChange={ setYourUserName } defaultValue={ userName } required/>
+      <input type="text" id="userName" minLength="1" maxLength="12" onChange={ props.changeUsrName } defaultValue={ props.stateUsrName } required/>
     </section>
   );
 }
