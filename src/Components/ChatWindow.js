@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import { UserTyped } from './UserTyped.js';
 import { chatRoom$ } from './store';
 import { resolvePtr } from 'dns';
+import { functionTypeAnnotation } from '@babel/types';
 
 export class ChatWindow extends PureComponent {
   constructor(props) {
@@ -25,57 +26,54 @@ export class ChatWindow extends PureComponent {
     this.messegnesAdd = this.messegnesAdd.bind(this);
   }
   componentDidMount() { 
-    console.log('yt');
     let messCount = 0;
+console.log('Reset');
 
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
-
-    this.listen.on('chatMess', res => {
-      console.log('Incomming chatMessegnes');
-      console.log(res);
-      
-          
-/*       let subscription = chatRoom$.subscribe((chatRoom) => { 
-        if (chatRoom) {
-          this.setState({
-            activeChatroom: '-',
-          });
-        }
-      }); */
-      for (let getChatMessObj of res.data) {
-
-        this.messegnesAdd(getChatMessObj);
+    this.listen.on('messegnes', res => {
+      console.log('Incomming Messegnes');
+      console.log(res);  
+      console.log(res.data);
+    
+      for (const chatMessObj of res.data) {
+        this.messegnesAdd(chatMessObj);
       }
-    });    
-  }
-  translateInSv = () => {
-    let getSplittedChatName = this.state.activeChatroom.split('-');
-    // console.log(getSplittedChatName);
-    return 'Chatrumm ' + getSplittedChatName[1];
-    
-  }
-  
-  messegnesAdd(chatMessObj){
-    this.setState({
-      incommingMess: [...this.state.incommingMess, chatMessObj] 
     });
-      /* listen.on('new_message', function(data) {
+    this.listen.on('newMessegnes', res => {
+      console.log('Incomming newMessegnes');
+      console.log(res);  
+        this.messegnesAdd(res);
+    });
+    this.listen.on('connection', function(){});
+    let subscription = chatRoom$.subscribe((chatRoom) => { 
+      if (chatRoom) {
+        this.setState({
+          activeChatroom: '-',
+        });
+      }
+    });
+  }
+  messegnesAdd(chatMessObj){  
+    console.log('Old mess add with new one');
+    
+    this.setState({
+      incommingMess: [ ...this.state.incommingMess, chatMessObj] 
+    });
+    
+  }
+  messagnesSend = () => {
+    let messBody = {
+      usr: this.state.usrName,
+      chatMess: this.state.messStr,
+    }
+    this.listen.emit('newMessegnes', messBody, (data) => {
       console.log(data);
+
       this.messegnesAdd(data);
-    }); */
-    //listen.on('connect', function(){});
-    
+    });
     
   }
-  
-  
-  /*  componentWillUnmount() {
-    listen.on('disconnect', function(){});
-  }
-  messegnesAdd(chattMessObj) {
-    this.setState({ messages: [...this.state.messages, chattMessObj] });
-  } */
   changeUsrName = (e) => {       
     this.setState({
       usrName: e.target.value,
@@ -86,21 +84,20 @@ export class ChatWindow extends PureComponent {
       messStr: e.target.value,
     })
   }
-  messagnesSend = () => {
-    let chatObj = {
-      usr: this.state.usrName,
-      chatMess: this.state.messStr,
-    }
-    console.log(chatObj);
-    
-    this.listen.emit('chatMess', chatObj, (response) => {
-      console.log(response);
-      
-      this.setState({
-        incommingMess: response,
-      });
-    });
+  componentWillUnmount() {
+    this.listen.on('disconnect', function(){});
   }
+  
+  
+  
+  translateInSv = () => {
+    let getSplittedChatName = this.state.activeChatroom.split('-');
+    return 'Chatrumm ' + getSplittedChatName[1];
+  }
+  
+  
+  
+  
   
   letterCounter = () => {
     if (this.state.messStr === 0) {
@@ -114,7 +111,9 @@ export class ChatWindow extends PureComponent {
       return getTotLeft;
     }
   } 
-  render() {
+  render() {  
+    console.log(this.state.incommingMess);
+    
     let options = {
       convertShortnames: true,
       convertUnicode: true,
@@ -126,10 +125,8 @@ export class ChatWindow extends PureComponent {
       },
       // this click handler will be set on every emoji
       onClick: event => alert(event.target.title)
-    };
-    
+    };    
     return (
-
       <section>
         <p id="chatWindow">{ this.translateInSv() }</p>
         <fieldset>
@@ -138,7 +135,7 @@ export class ChatWindow extends PureComponent {
               {
                 this.state.incommingMess.map(obj => {
                   return (
-                    <section className="messContainer" key={'1'}>
+                    <section className="messContainer" key={ obj.id }>
                     <header className="messHeader">
                       <p>{ obj.usr }</p> 
                     </header>

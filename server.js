@@ -13,8 +13,6 @@ const server = app.listen(port, () =>  console.log(`Chatserver is listening on p
 
 let chatRooms = require('./server/ChatRoom.json');
 let chatMess = require('./server/ChatMess.json');
-console.log('JSON fil, 16');
-console.log(chatMess);
 
 // Set id for the mess ==================
 let countID = 0;
@@ -34,14 +32,18 @@ function createID() {
     return countID;
 }
 
+// Creates a connection between the server and my client and listen for mess
 const io = socket(server);
-// Creates a connection between the server and my client
-io.on('connection', function(socket) {
+io.on('connection', (socket) => {
     console.log('Anslutning upprättad', socket.id);
 
-    // Send the mess on server at once
-    io.sockets.emit('chatMess', chatMess);
-    socket.on('chatMess', function(data) {
+    // Send all the mess on the server at once the client is fired up
+    io.sockets.emit('messegnes', chatMess); 
+
+    // Listen on newMessegnes and send it to all the client
+    socket.on('newMessegnes', (data) => {
+        console.log('Incomming mess from client');
+        console.log(data);
         
         let chatMessObj = {
             id: JSON.stringify(createID()),
@@ -50,21 +52,20 @@ io.on('connection', function(socket) {
             chatMess: data.chatMess
         }
         console.log('chatMess');
+        console.log(chatMessObj);
+        
         chatMess.data.push(chatMessObj);
-        
         // Save the movies in an json file
-         fileSystem.writeFile('./server/ChatMess.json', JSON.stringify(chatMess //debugging
-        , null, 2
-        ), function(err) {
-            
-            console.log(err);    
-        });
-    // Send the mess on server at once ther is any incommin mess from the client
-    io.sockets.emit('chatMess', chatMess);
-        console.log('42');
-        console.log(chatMess);
+        fileSystem.writeFile('./server/ChatMess.json', JSON.stringify(chatMess //debugging
+            , null, 2
+            ), function(err) {
+                
+                console.log(err);     
+            });
         
-    })
+            // Send the mess on server at once ther is any incommin mess from the client
+            io.sockets.emit('newMessegnes', chatMessObj);        
+    });
 });
 
 let chatroomCountID = 0;
@@ -77,19 +78,4 @@ let messCountID = 0;
 });
 
 // Create a chatroom & new mess ===============================================
-
-function createID() { 
-    for (let index = 0; index < movieList.data.length; index++) {
-        let idMax = movieList.data[index];
-        countID = idMax.id;
-    }
-    // Get the last id in my arr of movies
-    console.log('Id innan förändring');
-    console.log(parseInt(countID));
-    
-    countID++;
-    console.log('44');
-    console.log(countID);
-    
-    return countID;
-}*/
+*/
