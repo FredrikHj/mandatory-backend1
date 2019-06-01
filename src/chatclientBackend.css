@@ -44,11 +44,38 @@ body {
   color: white;
   height: 450px;
 }
-#gotToRoomContainer{
+#goToRoomContainer{
   position: absolute;
   left: calc(50% - 200px);
   top: calc(28%);
   width: 400px;
+}
+/* Create room */
+#createRoomContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 340px;
+}
+#createRoomHl{
+  margin-top: 20px;
+}
+.createRoomBtn{
+  position: relative;
+  width: 40px;
+  height: 40px;
+  top: 6px;
+  left: 10px;
+}
+#createRoomSymbol{
+  font-size: 20px;
+  color: black;
+  margin-top: 10px;
+  margin-left: -3px;
+}
+/* Choose room */
+#chooseRoomContainer{
+  
 }
 #chooseRoom{
   text-align: center;
