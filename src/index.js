@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './chatclientBackend.css';
-import App from './chatclientBackend';
+import './MainApp.css';
+import App from './MainApp';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<App />, document.getElementById('reactRoot'));

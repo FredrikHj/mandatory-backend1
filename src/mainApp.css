@@ -44,7 +44,9 @@ body {
   color: white;
   height: 450px;
 }
-#goToRoomContainer{
+
+/* HandleRoom */
+#handleRoomContainer{
   position: absolute;
   left: calc(50% - 200px);
   top: calc(28%);
@@ -55,7 +57,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  width: 340px;
+  width: 370px;
 }
 #createRoomHl{
   margin-top: 20px;
@@ -77,14 +79,19 @@ body {
 #chooseRoomContainer{
   
 }
-#chooseRoom{
+#chooseRoomHl{
   text-align: center;
 }
 #gotToRoom{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  width: 100%;
 }
+
+
+
+
 
 /* Header =========================================*/
 #headLine{
@@ -156,6 +163,8 @@ aside{
   flex-direction: column;
   justify-content: space-around;
 }
+
+/* ChatRoom =============================================*/
 #chatWindow{
   width: 100%;
   text-align: center;

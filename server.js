@@ -53,14 +53,26 @@ app.post('/NewRoom', (req, res) => {
         });    
 
     // Save the new room into a json files named as room + its ID
-    fileSystem.writeFile('./server/rooms/ChatRoom' + roomBody.config.id+ '.json', JSON.stringify(roomBody //debugging
+    fileSystem.writeFile('./server/rooms/r' + roomBody.config.id + '_' + roomBody.config.name + '.json', JSON.stringify(roomBody //debugging
         , null, 2
         ), function(err) {
             
             console.log(err);     
         });    
 });
+// Show a list with all rooms
+app.get('/RoomList', (req, res) => {
+    console.log(req.body);
+    res.status(200).send(roomSetting);
+});
 
+// Get into a specific room
+app.get('/ChatRoom:', (req, res) => {
+    console.log('71');
+    
+    console.log(req.param);
+    res.status(200).send(roomSetting);
+});
 // Set id for the mess ==================
 let countID = 0;
 function createID() { 
@@ -81,10 +93,10 @@ function createID() {
 
 // Creates a connection between the server and my client and listen for mess
 const io = socket(server);
-io.on('connection', (socket) => {
+/* io.on('connection', (socket) => {
     console.log('Anslutning upprättad', socket.id);
 
-    
+    socket.join('some room');
     // Send all messegnes on the server at once the client is open
     
     io.sockets.emit('messegnes', chatMess);
@@ -113,9 +125,9 @@ io.on('connection', (socket) => {
                 console.log(err);     
             });       
         // Send the mess on server at once ther is any incommin mess from the client
-        io.sockets.emit('newMessegnes', chatMessObj);            
+        io.sockets.emit('newMessegnes', chatMessObj);
     });
-});
+}); */
 let chatroomCountID = 0;
 
 let messCountID = 0;

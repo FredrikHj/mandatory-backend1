@@ -1,4 +1,3 @@
-
 // The ChatWindow ======================================================================================================
 import React, { PureComponent } from 'react';
 import io from 'socket.io-client';
@@ -12,8 +11,10 @@ import { UserTyped } from './UserTyped.js';
 import { chatRoom$ } from './store';
 import { resolvePtr } from 'dns';
 import { functionTypeAnnotation } from '@babel/types';
+import { MainApp } from '../MainApp.js';
+import axios from 'axios';
 
-export class ChatWindow extends PureComponent {
+export class ChatRoom extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,15 +24,23 @@ export class ChatWindow extends PureComponent {
       incommingMess: [],
       activeChatroom: '',
     }
-    this.messegnesAdd = this.messegnesAdd.bind(this);
   }
-  componentDidMount() { 
-    let messCount = 0;
-console.log('Reset');
+  componentDidMount() {
+    this.pathNameFix(this.props.location.pathname);
 
+    let messCount = 0;
+    console.log('Reset');
+
+    // Send my room id and name
+    axios.get('http://localhost:3001' //ChatRoom' + this.props.location.pathname
+    ).
+    then((res) => {
+    console.log(res);
+    
+   });
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
-    this.listen.on('messegnes', res => {
+/*     this.listen.on('messegnes', res => {
       console.log('Incomming Messegnes');
       console.log(res);  
       console.log(res.data);
@@ -45,7 +54,7 @@ console.log('Reset');
       console.log(res);  
         this.messegnesAdd(res);
     });
-    this.listen.on('connection', function(){});
+    this.listen.on('connection', function(){}); */
     let subscription = chatRoom$.subscribe((chatRoom) => { 
       if (chatRoom) {
         this.setState({
@@ -54,7 +63,13 @@ console.log('Reset');
       }
     });
   }
-  messegnesAdd(chatMessObj){  
+  pathNameFix = (pathName) => {
+    console.log(pathName);
+    let getPathNameArr = pathName.split(':').join();
+    console.log(getPathNameArr);
+    
+  }
+  messegnesAdd = (chatMessObj) => {  
     console.log('Old mess add with new one');
     
     this.setState({
@@ -113,7 +128,6 @@ console.log('Reset');
   } 
   render() {  
     console.log(this.state.incommingMess);
-    
     let options = {
       convertShortnames: true,
       convertUnicode: true,
@@ -127,7 +141,7 @@ console.log('Reset');
       onClick: event => alert(event.target.title)
     };    
     return (
-      <section>
+      <section id="mainContentContainer">
         <p id="chatWindow">{ this.translateInSv() }</p>
         <fieldset>
           <legend>Meddelanden</legend>
@@ -163,7 +177,9 @@ console.log('Reset');
               { this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
           </fieldset>
           <section id="changeRoomContainer">
-            <p id="changeRoomHeadline">Byt rumm</p>
+            <p id="changeRoomHeadline">
+            <Link className="button" to={ '/'}>Hantera rum</Link>
+            </p>
 
           </section>
         <UserContainer
