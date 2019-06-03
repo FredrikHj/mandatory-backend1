@@ -8,12 +8,13 @@ import Linkify from 'react-linkify';
 import Emojify from "react-emojione";
 import {emojify} from 'react-emojione'; */
 import {Helmet} from "react-helmet";
+//import { pollWrapper } from 'poll-js';
 
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 import { ChatRoom } from './Components/ChatRoom.js';
-import { chatRoom$ } from './Components/store.js';
+import { currentRoom$ } from './Components/store.js';
 import { HandleRoom } from './Components/HandleRoom.js';
 import { Header } from './Components/Header.js';
 
@@ -41,9 +42,14 @@ function MainApp() {
   const [userName, setUserName ] = useState('');
   const [roomNameStr, updateRoomNameStr ] = useState('');
   const [roomList, setRoomList ] = useState([]);
-  const [chatroom, setChatroom ] = useState('');
+  const [showChatRoom, setShowChatRoom ] = useState('');
+  const [chatRoomCreatedMess, setChatRoomCreatedMess ] = useState(false);
+  const [chatRoomCreatedStr, setChatRoomCreatedStr ] = useState('');
+
 
   useEffect(() => {
+    console.log('rgdg');
+    
     setApiUrl('http://localhost:3001');
     //setRedirect(false);
     
@@ -52,46 +58,51 @@ function MainApp() {
         console.log(res);
         setRoomList(res.data);
       });
-      /*     let subscription = chatRoom$.subscribe((chatRoom) => { 
-        if (chatRoom) {
-          setChatroom(chatRoom);
+      let subscription = currentRoom$.subscribe((currentRoom) => { 
+        if (currentRoom) {
+          setShowChatRoom(' - ' + currentRoom);
         }
-      }); */
+      });
     }, []);
     
-    function creatRoom(){
+    function createRoom(){
       console.log(roomNameStr);
       //if (redirect === true) return <Redirect to="/"/>;
     
     axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
       then((res) => {
       console.log(res);
-      
+      setChatRoomCreatedMess(true);
+      setChatRoomCreatedStr(res.statusText)
     });
   }
   let setRoomName = (e) => {
-    updateRoomNameStr(e.target.value);
+    let targetRoom = e.target.value;
+    console.log(targetRoom);
+    
+    updateRoomNameStr(targetRoom);
+    console.log(showChatRoom);
   }
-  console.log(chatroom);
   
     return (
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>{ 'Chatklient - Rum ' + chatroom } </title>
+          <title>{ 'Chatklient' + showChatRoom } </title>
         </Helmet>
         <header id="header">
           <Header
-            chatroom={ chatroom }
           />
         </header>
         <main id="mainContainer">
           <Router>
           
             <Route exact path="/" render={(props) => <HandleRoom {...props}
-              roomName={ roomNameStr }
-              creatRoom= { creatRoom }
+              setRoomName={ setRoomName }
+              createRoom= { createRoom }
               roomList={ roomList }
+              chatRoomCreatedMess={ chatRoomCreatedMess }
+              chatRoomCreatedStr={ chatRoomCreatedStr }
               />}
             />
             <Route exact path="/ChatRoom=:id" component={ ChatRoom } />

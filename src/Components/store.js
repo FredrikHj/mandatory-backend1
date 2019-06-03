@@ -1,9 +1,8 @@
 import {BehaviorSubject} from "rxjs";
-const chatRoom = '';
 
-export const chatRoom$ = new BehaviorSubject(chatRoom);
+export const currentRoom$ = new BehaviorSubject(window.localStorage.getItem('currentRoom'));
 
-export function updateChatRoom(chatRoom) {
-  console.log(chatRoom);
-  chatRoom$.next(chatRoom);
+export function updateCurrentRoom(getPathName) {
+  console.log(getPathName);
+  currentRoom$.next(getPathName);
 }

@@ -1,0 +1,23 @@
+{
+  "config": {
+    "id": "1",
+    "name": "Fredrik",
+    "userTyped": [],
+    "status": "",
+    "content-type": ""
+  },
+  "messegnes": [
+    {
+      "id": "1",
+      "timeStamp": "",
+      "usr": "FESF",
+      "chatMess": "fes"
+    },
+    {
+      "id": "2",
+      "timeStamp": "",
+      "usr": "FESF",
+      "chatMess": "fes"
+    }
+  ]
+}

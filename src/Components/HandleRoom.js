@@ -12,7 +12,9 @@ export function HandleRoom(props) {
       <section id="createRoomContainer">
         <p id="createRoomHl"> Skapa rum >>> </p> 
         <span>
-          <input type="text" onChange={ props.setRoomName }/> >>> <button className="button createRoomBtn" onClick={ props.creatRoom }> <p id="createRoomSymbol">+</p></button>  
+          <input type="text" onChange={ props.setRoomName }/> >>> <button className="button createRoomBtn" onClick={ props.createRoom }>
+          <p id="createRoomSymbol">+</p></button>  
+          {/* <p id="roomCreatedMess" style={(props.chatRoomCreatedMess === true) ? {display: 'block'} : {display: 'none'} }> {'Chatroom is ' + props.chatRoomCreatedStr }</p> */}
         </span> 
       </section>
       <section id="chooseRoomContainer">
@@ -21,7 +23,7 @@ export function HandleRoom(props) {
           {
             props.roomList.map(obj => {
               return (
-                <Link className="button" to={ '/ChatRoom=' + obj.id + '_' + obj.name} key={ obj.id }> { obj.name }</Link>
+                <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }> { obj.roomName }</Link>
               );
             })
           }

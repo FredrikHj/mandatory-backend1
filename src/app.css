@@ -87,13 +87,103 @@ body {
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
+  flex-wrap: wrap;
+}
+.topMargin{
+  margin-top: 15px;
+}
+/* ChatRoom =========================================*/
+#chatRoomHedline{
+  position: relative;
+  top: 10px;
+  text-align: center;
+}
+fieldset{
+  border: none;
+}
+.messagnesReceive{
+  height: 198px;
+  overflow-x: hidden;
+}
+.messContainer{
+  padding-left: 3px;
+  padding-bottom: 3px;
+  margin-top: 5px;
+}
+.messHeader{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  width: 98%;
+  border-bottom: 2px solid black;
+  height: 34px;
+}
+.messContent{
+  margin-top: 6px;
+  width: 100%;
+  word-break: break-all;
+}
+#middleLine{
+  width: 100%;
+  height: 3px;
+  background-color: grey;
+}
+#messagneSend{
+  position: absolute;
+  left: 0px;
+  bottom: 10px;
+}
+.inputReq{
+  font-weight: bold;
+  color: red
+}
+#chatMessegnes{
+  width: 250px;
+  height: 50px;
+  resize: none;
+}
+#finishMess{
+  position: relative;
+  top: -15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+#sendBtn{
+  height: 20px;
+}
+#changeRoomContainer{
+  position: absolute;
+  left: 331px;
+  top: 26px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 200px;
+}
+#changeRoomHeadline{
+  text-align: center;
+  color: white;
+  margin-bottom: -10px;
 }
 
+/* UserContainer  =========================================*/
+#userName{
+  width: 95px;
+  position: relative;
+}
+/* UserTyped  =========================================*/
 
 
 
 
-/* Header =========================================*/
+
+
 #headLine{
   margin-top: 5px;
   text-align: center;
@@ -130,10 +220,7 @@ body {
   top: 1px;
   color: white;
 }
-#userName{
-  width: 95px;
-  position: relative;
-}
+
 #usrStrView1{
   font-size: 18px;
 }
@@ -170,23 +257,10 @@ aside{
   text-align: center;
   font-size: 18px;
   color: black;
+  
   margin-top: 0px;
 }
-#changeRoomContainer{
-  position: absolute;
-  left: 331px;
-  top: 26px;
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 200px;
-}
-#changeRoomHeadline{
-  text-align: center;
-  color: white;
-  margin-bottom: -10px;
-}
+
 #userList{
   position: absolute;
   left: 300px;
@@ -207,41 +281,7 @@ aside{
   font-size: 14px;
   font-weight: bold;
 }
-fieldset{
-  border: none;
-}
-.messagnesReceive{
-  height: 198px;
-  overflow-x: hidden;
-}
-.messContainer{
-  padding-left: 3px;
-  padding-bottom: 3px;
-}
-.messContainer p{
-  margin-top: 1px;
-}
-.messHeader{
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  width: 98%;
-  border-bottom: 2px solid black;
-  height: 25px;
-}
-.messContent{
-  margin-top: 6px;
-  width: 100%;
-  word-break: break-all;
-}
-#middleLine{
-  width: 100%;
-  height: 3px;
-  background-color: grey;
-}
+
 .timeIdContainer{
   width: 300px;
 }
@@ -249,24 +289,5 @@ fieldset{
   word-break: break-all;
   width: 100%;
 }
-#messagneSend{
-  position: absolute;
-  left: 24px;
-  bottom: -30px;
-}
-#chatMessegnes{
-  width: 290px;
-  height: 50px;
-  resize: none;
-}
-#finishMess{
-  position: relative;
-  top: -15px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-}
-#sendBtn{
-  height: 20px;
-}
+
+

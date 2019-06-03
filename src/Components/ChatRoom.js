@@ -7,11 +7,13 @@ import Emojify from "react-emojione";
 
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
-import { UserTyped } from './UserTyped.js';
-import { chatRoom$ } from './store';
-import { resolvePtr } from 'dns';
+import { currentRoom$, updateCurrentRoom } from './store';
+
+import { UserName, UserTyped } from './SideComponents.js';
+/* import { resolvePtr } from 'dns';
 import { functionTypeAnnotation } from '@babel/types';
-import { MainApp } from '../MainApp.js';
+import { MainApp } from '../MainApp.js'; */
+
 import axios from 'axios';
 
 export class ChatRoom extends PureComponent {
@@ -40,12 +42,11 @@ export class ChatRoom extends PureComponent {
    console.log('ChatRoom=' + this.pathNameFix(this.props.location.pathname));
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
-/*     this.listen.on('messegnes', res => {
+    this.listen.on('messegnes', res => {
       console.log('Incomming Messegnes');
-      console.log(res);  
-      console.log(res.data);
+      console.log(res);
     
-      for (const chatMessObj of res.data) {
+      for (const chatMessObj of res.messegnes) {
         this.messegnesAdd(chatMessObj);
       }
     });
@@ -54,19 +55,22 @@ export class ChatRoom extends PureComponent {
       console.log(res);  
         this.messegnesAdd(res);
     });
-    this.listen.on('connection', function(){}); */
-    let subscription = chatRoom$.subscribe((chatRoom) => { 
-      if (chatRoom) {
+    this.listen.on('connection', function(){});
+    let subscription = currentRoom$.subscribe((currentRoom) => { 
+      if (currentRoom) {
         this.setState({
-          activeChatroom: '-',
+          activeChatroom: currentRoom,
         });
       }
     });
   }
   pathNameFix = (pathName) => {
-    let getPathNameArr = pathName.split('=').reverse();
-    console.log(getPathNameArr[0]);
-    return getPathNameArr[0];
+    let getPathName = pathName.split('=');
+    let getFixedPathName = getPathName[1].split('_')[0];
+    
+    updateCurrentRoom(getPathName[1]);
+    window.localStorage.setItem('currentRoom', getPathName);    
+    return getFixedPathName;
   }
   messegnesAdd = (chatMessObj) => {  
     console.log('Old mess add with new one');
@@ -78,14 +82,16 @@ export class ChatRoom extends PureComponent {
   }
   messagnesSend = () => {
     let messBody = {
-      usr: this.state.usrName,
-      chatMess: this.state.messStr,
+      outUsr: this.state.usrName,
+      outChatMess: this.state.messStr,
     }
     this.listen.emit('newMessegnes', messBody, (data) => {
       console.log(data);
 
       this.messegnesAdd(data);
     });
+    
+    console.log(messBody);
     
   }
   changeUsrName = (e) => {       
@@ -98,21 +104,12 @@ export class ChatRoom extends PureComponent {
       messStr: e.target.value,
     })
   }
+  removeLocalstorage = () => {
+    window.localStorage.removeItem('currentRoom');
+  }
   componentWillUnmount() {
     this.listen.on('disconnect', function(){});
-  }
-  
-  
-  
-  translateInSv = () => {
-    let getSplittedChatName = this.state.activeChatroom.split('-');
-    return 'Chatrumm ' + getSplittedChatName[1];
-  }
-  
-  
-  
-  
-  
+  }  
   letterCounter = () => {
     if (this.state.messStr === 0) {
       return 0;
@@ -141,9 +138,8 @@ export class ChatRoom extends PureComponent {
     };    
     return (
       <section id="mainContentContainer">
-        <p id="chatWindow">{ this.translateInSv() }</p>
         <fieldset>
-          <legend>Meddelanden</legend>
+          <legend id="chatRoomHedline">Meddelanden</legend>
             <ScrollToBottom className="messagnesReceive">
               {
                 this.state.incommingMess.map(obj => {
@@ -172,16 +168,16 @@ export class ChatRoom extends PureComponent {
           <fieldset id="messagneSend">
             <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
               <textarea id="chatMessegnes" maxLength="200" onChange={ this.changeMess } required></textarea>
-              <div id="finishMess">  Använda tecken: <p id="totCounter" style={(this.state.messStr.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>
+              <div id="finishMess">  Använda tecken: <p style={(this.state.messStr.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>
               { this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
           </fieldset>
           <section id="changeRoomContainer">
             <p id="changeRoomHeadline">
-            <Link className="button" to={ '/'}>Hantera rum</Link>
+            <Link className="button" to={ '/'} onClick={ this.removeLocalstorage }>Hantera rum</Link>
             </p>
 
           </section>
-        <UserContainer
+        <UserName
           changeUsrName={ this.changeUsrName }
           stateUsrName={ this.state.usrName }
         />
@@ -191,13 +187,3 @@ export class ChatRoom extends PureComponent {
   }
 }
 
-    //  UserName =====================================================================================================================
-function UserContainer(props) {
-
-  return (
-    <section id="userContainer">
-      <label htmlFor="userName" id="userName">Användarnamn</label><br/>
-      <input type="text" id="userName" minLength="1" maxLength="12" onChange={ props.changeUsrName } defaultValue={ props.stateUsrName } required/>
-    </section>
-  );
-}
