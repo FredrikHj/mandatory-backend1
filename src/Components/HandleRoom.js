@@ -21,7 +21,7 @@ export function HandleRoom(props) {
           {
             props.roomList.map(obj => {
               return (
-                <Link className="button" to={ '/ChatRoom' + obj.id + '_' + obj.name} key={ obj.id }> { obj.name }</Link>
+                <Link className="button" to={ '/ChatRoom=' + obj.id + '_' + obj.name} key={ obj.id }> { obj.name }</Link>
               );
             })
           }

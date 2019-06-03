@@ -66,13 +66,51 @@ app.get('/RoomList', (req, res) => {
     res.status(200).send(roomSetting);
 });
 
-// Get into a specific room
-app.get('/ChatRoom:', (req, res) => {
-    console.log('71');
-    
-    console.log(req.param);
-    res.status(200).send(roomSetting);
+// Get into a specific room, room is store in :id
+app.get('/ChatRoom/:id', (req, res) => {
+    let roomId = req.params.id;
+
+    // Creates a connection between the server and my client and listen for mess
+    const io = socket(server);
+    io.on('connection', (socket) => {
+        console.log('Anslutning upprättad', socket.id);
+        
+        socket.join(roomId);
+  /*       // Send all messegnes on the server at once the client is open
+        
+        io.sockets.emit('messegnes', chatMess);
+        
+
+        // Listen on newMessegnes and send it to all the client
+        socket.on('newMessegnes', (data) => {
+            console.log('Incomming mess from client');
+            console.log(data);
+            
+            let chatMessObj = {
+                id: JSON.stringify(createID()),
+                timeStamp: '', //
+                usr: data.usr,
+                chatMess: data.chatMess
+            }
+            console.log('chatMess');
+            console.log(chatMessObj);
+            
+            chatMess.data.push(chatMessObj);
+            // Save the movies in an json file
+            fileSystem.writeFile('./server/ChatMess.json', JSON.stringify(chatMess //debugging
+                , null, 2
+                ), function(err) {
+                    
+                    console.log(err);     
+                });       
+            // Send the mess on server at once ther is any incommin mess from the client
+            io.sockets.emit('newMessegnes', chatMessObj);
+        }); */
+    });
+
+    socket.leave(roomId);
 });
+
 // Set id for the mess ==================
 let countID = 0;
 function createID() { 
@@ -91,43 +129,7 @@ function createID() {
     return countID;
 }
 
-// Creates a connection between the server and my client and listen for mess
-const io = socket(server);
-/* io.on('connection', (socket) => {
-    console.log('Anslutning upprättad', socket.id);
 
-    socket.join('some room');
-    // Send all messegnes on the server at once the client is open
-    
-    io.sockets.emit('messegnes', chatMess);
-    
-
-    // Listen on newMessegnes and send it to all the client
-    socket.on('newMessegnes', (data) => {
-        console.log('Incomming mess from client');
-        console.log(data);
-        
-        let chatMessObj = {
-            id: JSON.stringify(createID()),
-            timeStamp: '', //
-            usr: data.usr,
-            chatMess: data.chatMess
-        }
-        console.log('chatMess');
-        console.log(chatMessObj);
-        
-        chatMess.data.push(chatMessObj);
-        // Save the movies in an json file
-        fileSystem.writeFile('./server/ChatMess.json', JSON.stringify(chatMess //debugging
-            , null, 2
-            ), function(err) {
-                
-                console.log(err);     
-            });       
-        // Send the mess on server at once ther is any incommin mess from the client
-        io.sockets.emit('newMessegnes', chatMessObj);
-    });
-}); */
 let chatroomCountID = 0;
 
 let messCountID = 0;

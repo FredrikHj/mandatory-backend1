@@ -25,19 +25,19 @@ export class ChatRoom extends PureComponent {
       activeChatroom: '',
     }
   }
-  componentDidMount() {
-    this.pathNameFix(this.props.location.pathname);
-
+  componentDidMount() {  
     let messCount = 0;
     console.log('Reset');
 
     // Send my room id and name
-    axios.get('http://localhost:3001' //ChatRoom' + this.props.location.pathname
+    axios.get('http://localhost:3001/ChatRoom/' + this.pathNameFix(this.props.location.pathname)
+    
     ).
     then((res) => {
     console.log(res);
     
    });
+   console.log('ChatRoom=' + this.pathNameFix(this.props.location.pathname));
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
 /*     this.listen.on('messegnes', res => {
@@ -64,10 +64,9 @@ export class ChatRoom extends PureComponent {
     });
   }
   pathNameFix = (pathName) => {
-    console.log(pathName);
-    let getPathNameArr = pathName.split(':').join();
-    console.log(getPathNameArr);
-    
+    let getPathNameArr = pathName.split('=').reverse();
+    console.log(getPathNameArr[0]);
+    return getPathNameArr[0];
   }
   messegnesAdd = (chatMessObj) => {  
     console.log('Old mess add with new one');

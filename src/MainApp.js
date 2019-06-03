@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
 //import './chatclient.css';
 // import io from 'socket.io-client';
 /* import ScrollToBottom from 'react-scroll-to-bottom';
@@ -93,7 +94,7 @@ function MainApp() {
               roomList={ roomList }
               />}
             />
-            <Route exact path="/ChatRoom:id" component={ ChatRoom } />
+            <Route exact path="/ChatRoom=:id" component={ ChatRoom } />
           </Router>
         </main>
       </>
