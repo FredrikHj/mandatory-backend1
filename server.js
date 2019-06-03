@@ -74,7 +74,7 @@ app.get('/ChatRoom/:id', (req, res) => {
     const io = socket(server);
     io.on('connection', (socket) => {
         console.log('Anslutning upprättad', socket.id);
-        
+        // test
         socket.join(roomId);
   /*       // Send all messegnes on the server at once the client is open
         
