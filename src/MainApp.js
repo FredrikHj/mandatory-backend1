@@ -7,7 +7,7 @@ import {Helmet} from "react-helmet";
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 import { ChatRoom } from './Components/ChatRoom.js';
-import { currentRoom$ } from './Components/store.js';
+import { currentRoom$, updateCurrentRoom } from './Components/store.js';
 import { HandleRoom } from './Components/HandleRoom.js';
 import { Header } from './Components/Header.js';
 
@@ -51,14 +51,24 @@ function MainApp() {
       setChatRoomCreatedStr(res.statusText)
     });
   }
+  let pathNameFix = (pathName) => {
+    let getPathName = pathName.split('=');
+    let getFixedPathName = getPathName[1].split('_')[0];
+    
+    updateCurrentRoom(getPathName[1]);
+    window.localStorage.setItem('currentRoom', getPathName);    
+    return getFixedPathName;
+  }
   let removeRoom = (e) => {
-    let targetDelBtn = e.target;
-    axios.delete(apiUrl + '/RemoveRoom').
+    
+    let targetDelBtn = e.target.id;
+    console.log(targetDelBtn);
+    axios.delete(apiUrl + '/RemoveRoom/' + targetDelBtn
+    ).
     then((res) => {
       console.log(res);
 
     });
-    
   }
   let setRoomName = (e) => {
     let targetRoom = e.target.value;
@@ -67,7 +77,7 @@ function MainApp() {
     updateRoomNameStr(targetRoom);
     console.log(showChatRoom);
   }
-  
+
     return (
       <>
         <Helmet>
@@ -88,9 +98,13 @@ function MainApp() {
               chatRoomCreatedMess={ chatRoomCreatedMess }
               chatRoomCreatedStr={ chatRoomCreatedStr }
               removeRoom={ removeRoom }
+              pathNameFix={ pathNameFix }
               />}
             />
-            <Route exact path="/ChatRoom=:id" component={ ChatRoom } />
+            <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}
+              pathNameFix={ pathNameFix }
+              />}
+            />
           </Router>
         </main>
       </>

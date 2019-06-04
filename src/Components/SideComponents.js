@@ -12,18 +12,18 @@ export function UserName(props) {
     </section>
   );
 }
-export function UserTyped() {
-    const [userName, setUserName ] = useState('');
-  function setYourUserName() {
-  
-   }
+export function UserTyped(props) {
   return (
     <section id="userList">
       <ul> <p id="userTyped">Dessa har skrivit</p>
-        <li>grfeg</li>
-        <li>grfeg</li>
-        <li>grfeg</li>
-        <li>grfeg</li>
+       {
+          props.userTyped.map(userTyped => {
+            console.log(userTyped)
+            return(
+              <li key={ '1' }>{ userTyped.name }</li>
+            );
+          })
+        }
       </ul>
     </section>
   );

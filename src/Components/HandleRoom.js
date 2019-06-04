@@ -19,18 +19,18 @@ export function HandleRoom(props) {
       </section>
       <section id="chooseRoomContainer">
         <p id="chooseRoomHl">Välj rum:</p>
-        <section id="gotToRoom">
-          {
-            props.roomList.map(obj => {
-              return (
-                <>
-                  <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }>{ obj.roomName }</Link>
-                  <p className="removeRoomBtn" onClick={ props.removeRoom } key={ obj.id } id={ obj.id }>X</p>
-                </>
-              );
-            })
-          }
-        </section>
+          <section id="gotToRoom">
+            {(props.roomList.length != 0) ? 
+              props.roomList.map(obj => {
+                return (
+                  <>
+                    <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }>{ obj.roomName }</Link>
+                      <p className="removeRoomBtn" onClick={ props.removeRoom } key={ obj.id } id={ obj.id }>X</p>
+                  </>
+                );
+              }) : <p>Rum laddas ....</p>
+            }
+          </section>
       </section>
     </section>
     );

@@ -1,10 +1,26 @@
 {
   "config": {
     "id": "3",
-    "name": "fe",
-    "userTyped": [],
+    "name": "Fredrik3",
+    "userTyped": [
+      "rgrg",
+      "gtdh"
+    ],
     "status": "",
     "content-type": ""
   },
-  "messegnes": []
+  "messegnes": [
+    {
+      "id": "1",
+      "timeStamp": "",
+      "usr": "rgrg",
+      "chatMess": "gre"
+    },
+    {
+      "id": "2",
+      "timeStamp": "",
+      "usr": "gtdh",
+      "chatMess": "gre"
+    }
+  ]
 }

@@ -1,10 +1,32 @@
 {
   "config": {
     "id": "7",
-    "name": "ht",
-    "userTyped": [],
+    "name": "Fredrik7",
+    "userTyped": [
+      "efewfe",
+      "efewfe"
+    ],
     "status": "",
     "content-type": ""
   },
-  "messegnes": []
+  "messegnes": [
+    {
+      "id": "1",
+      "timeStamp": "",
+      "usr": "dwqwd",
+      "chatMess": "efw"
+    },
+    {
+      "id": "2",
+      "timeStamp": "",
+      "usr": "efewfe",
+      "chatMess": "gvrg"
+    },
+    {
+      "id": "3",
+      "timeStamp": "",
+      "usr": "efewfe",
+      "chatMess": "gvrg"
+    }
+  ]
 }

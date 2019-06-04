@@ -1,52 +1,37 @@
 [
   {
-    "id": "1",
-    "roomName": "Fredrik1",
-    "fileName": "ChatRoom1.json"
-  },
-  {
-    "id": "2",
-    "roomName": "F2",
-    "fileName": "ChatRoom2.json"
-  },
-  {
     "id": "3",
-    "roomName": "fe",
+    "roomName": "Fredrik3",
     "fileName": "ChatRoom3.json"
   },
   {
     "id": "4",
-    "roomName": "fe",
+    "roomName": "Fredrik4",
     "fileName": "ChatRoom4.json"
   },
   {
     "id": "5",
-    "roomName": "fe",
+    "roomName": "Fredrik5",
     "fileName": "ChatRoom5.json"
   },
   {
     "id": "6",
-    "roomName": "ujy",
+    "roomName": "Fredrik6",
     "fileName": "ChatRoom6.json"
   },
   {
     "id": "7",
-    "roomName": "ht",
+    "roomName": "Fredrik7",
     "fileName": "ChatRoom7.json"
   },
   {
     "id": "8",
-    "roomName": "dfvdf",
+    "roomName": "Fredrik8",
     "fileName": "ChatRoom8.json"
   },
   {
     "id": "9",
-    "roomName": "fef",
+    "roomName": "Fred9",
     "fileName": "ChatRoom9.json"
-  },
-  {
-    "id": "10",
-    "roomName": " fd",
-    "fileName": "ChatRoom10.json"
   }
 ]

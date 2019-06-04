@@ -7,7 +7,7 @@ import Emojify from "react-emojione";
 
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
-import { currentRoom$, updateCurrentRoom } from './store';
+import { currentRoom$ } from './store';
 
 import { UserName, UserTyped } from './SideComponents.js';
 /* import { resolvePtr } from 'dns';
@@ -25,6 +25,7 @@ export class ChatRoom extends PureComponent {
       messStr: '',
       incommingMess: [],
       activeChatroom: '',
+      userTyped: [],
     }
   }
   componentDidMount() {  
@@ -32,19 +33,24 @@ export class ChatRoom extends PureComponent {
     console.log('Reset');
 
     // Send my room id and name
-    axios.get('http://localhost:3001/ChatRoom/' + this.pathNameFix(this.props.location.pathname)
-    
-    ).
+    axios.get('http://localhost:3001/ChatRoom/' + this.props.pathNameFix(this.props.location.pathname)).
     then((res) => {
-    console.log(res);
-    
+    console.log(res); 
    });
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
+  /*     // Reset the userTypedArr
+      this.setState({
+        userTyped: [],
+      });  */
       console.log('Incomming Messegnes');
       console.log(res);
-    
+
+      // Update the userTypedArr
+      this.setState({
+        userTyped: res.config.userTyped,
+      }); 
       for (const chatMessObj of res.messegnes) {
         this.messegnesAdd(chatMessObj);
       }
@@ -62,14 +68,6 @@ export class ChatRoom extends PureComponent {
         });
       }
     });
-  }
-  pathNameFix = (pathName) => {
-    let getPathName = pathName.split('=');
-    let getFixedPathName = getPathName[1].split('_')[0];
-    
-    updateCurrentRoom(getPathName[1]);
-    window.localStorage.setItem('currentRoom', getPathName);    
-    return getFixedPathName;
   }
   messegnesAdd = (chatMessObj) => {  
     console.log('Old mess add with new one');
@@ -121,8 +119,10 @@ export class ChatRoom extends PureComponent {
       return getTotLeft;
     }
   } 
-  render() {  
-    console.log(this.state.incommingMess);
+  render() {
+    console.log(this.state.userTyped);
+  
+    let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
       convertUnicode: true,
@@ -138,10 +138,10 @@ export class ChatRoom extends PureComponent {
     return (
       <section id="mainContentContainer">
         <fieldset>
-          <legend id="chatRoomHedline">Meddelanden</legend>
+          <legend id="chatRoomHedline">Meddelanden</legend>            
             <ScrollToBottom className="messagnesReceive">
-              {
-                this.state.incommingMess.map(obj => {
+              {(incommingMess.length != 0) ? 
+                incommingMess.map(obj => {
                   return (
                     <section className="messContainer" key={ obj.id }>
                     <header className="messHeader">
@@ -159,7 +159,7 @@ export class ChatRoom extends PureComponent {
                     </section>
 
                   );
-                })
+                }) : <p>Meddelanden laddas ....</p>
               }
             </ScrollToBottom>
             <hr className="middleLine"/>
@@ -180,7 +180,9 @@ export class ChatRoom extends PureComponent {
           changeUsrName={ this.changeUsrName }
           stateUsrName={ this.state.usrName }
         />
-        <UserTyped/>
+        <UserTyped
+          userTyped={ this.state.userTyped }
+        />
       </section>
     );
   }

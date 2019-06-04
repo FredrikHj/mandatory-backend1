@@ -38,7 +38,6 @@ app.post('/NewRoom', (req, res) => {
             id: getRoomID, 
             name: req.body.roomName,
             userTyped: [],
-            "status": "",
             "content-type": "",
         },
         messegnes: [],
@@ -73,10 +72,11 @@ console.log(incommingRoomId);
 const io = socket(server);
 io.on('connection', (socket) => {
     console.log('Anslutning upprättad', socket.id);
-    let currentRoomFile =  require('./server/rooms/ChatRoom' + incommingRoomId + '.json');
+    let currentRoomFile =  require('./server/rooms/ChatRoom' + incommingRoomId
+     + '.json');
     // test
     console.log('82');
-    console.log('ChatRoom' + incommingRoomId);
+    console.log(currentRoomFile);
     
     
     //Send all messegnes on the server at once the client is open
@@ -85,18 +85,20 @@ io.on('connection', (socket) => {
 
     // Listen on newMessegnes and send it to all the client
     socket.on('newMessegnes', (data) => {
-        console.log('Incomming mess from client');
-        console.log(data);
-    
+        console.log('89');
+           console.log(currentRoomFile);
         let chatMessObj = {
             id: JSON.stringify(createID()),
             timeStamp: '', //
             usr: data.outUsr,
             chatMess: data.outChatMess
-        }        
+        }
+        // Push the new mes and the user into the file
         currentRoomFile.messegnes.push(chatMessObj);
+        currentRoomFile.config.userTyped.push(data.outUsr);
+
         // Save the movies in an json file
-        fileSystem.writeFile('./server/rooms/ChatRoom1.json', JSON.stringify(currentRoomFile //debugging
+        fileSystem.writeFile('./server/rooms/ChatRoom' + incommingRoomId +'.json', JSON.stringify(currentRoomFile //debugging
             , null, 2
             ), function(err) {
                 
@@ -105,29 +107,68 @@ io.on('connection', (socket) => {
             // Send the mess on server at once ther is any incommin mess from the client
             socket.join(incommingRoomId).emit('newMessegnes', chatMessObj);
         });
+        // Set id for the mess ==================
+        let countID = 0;
+        function createID() { 
+            console.log('roomfile');
+            console.log(currentRoomFile);
+            
+            for (let index = 0; index < currentRoomFile.messegnes.length; index++) {
+                let idMax = currentRoomFile.messegnes[index];
+                countID = idMax.id;
+            }
+            // Get the last id in my arr of movies
+            console.log('Id innan förändring');
+            console.log(parseInt(countID));
+            
+            countID++;
+            console.log('44');
+            console.log(countID);
+            
+            return countID;
+        }
     });
-    
+    console.log('110');
+    console.log(currentRoomFile);
     //socket.leave(roomId);
+
 });
     
-// Set id for the mess ==================
-let countID = 0;
-function createID() { 
-    for (let index = 0; index < currentRoomFile.messegnes.length; index++) {
-        let idMax = currentRoomFile.messegnes[index];
-        countID = idMax.id;
-    }
-    // Get the last id in my arr of movies
-    console.log('Id innan förändring');
-    console.log(parseInt(countID));
-    
-    countID++;
-    console.log('44');
-    console.log(countID);
-    
-    return countID;
-}
 // Delete a room
 app.delete('/RemoveRoom/:id', (req, res) => { 
+    let incommingRoomIdStr = req.params.id;
+    console.log(typeof incommingRoomIdStr);
+    let incommingRoomIdNr = parseInt(incommingRoomIdStr);
+    console.log(typeof incommingRoomIdNr);
+    
+    // Remove the setting and the file for the room
+    fileSystem.unlink('./server/rooms/ChatRoom' + incommingRoomIdStr +'.json', (err) => {});
+   
+    // Verify if ID
+    if (!incommingRoomIdNr) {
+       res.status(400).end();
+     return;
+    }
+    let indexToRemove = roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);
+    console.log('Index');
+    console.log(indexToRemove);
+    
+    if (indexToRemove !== -1) {
+        
+        // Remove the item in the list
+        roomSetting.splice(indexToRemove, 1);
+    }
 
+    // Save the new room bak to its json file
+    fileSystem.writeFile('./server/roomSetting.json', JSON.stringify(roomSetting //debugging
+        , null, 2
+        ), function(err) {
+            if (err) {
+                console.log(err);
+                res.status(204);
+                return;
+            }   
+    });
+            
+    res.status(204).end();
 })
