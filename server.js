@@ -1,17 +1,15 @@
 // Övning med routes     
 const express = require('express');
 const app = express();
-app.use(express.json());
-
 let cors = require('cors');
+
+app.use(express.json());
 app.use(cors());
 
 const fileSystem = require('fs');
 const socket = require('socket.io');
-
 const port = 3001;
 const server = app.listen(port, () =>  console.log(`Chatserver is listening on port ${port}!`));
-
 
 // Create a chatRoom
 let roomId  = () => { 
@@ -20,13 +18,8 @@ let roomId  = () => {
         countID = idMax.id;
     }
     // Get the last id in my arr of movies
-    console.log('Id innan förändring');
-    console.log(parseInt(countID));
-    
-    countID++;
-    console.log('44');
-    console.log(countID);
-    
+    countID++;    
+
     return countID;
 }
 // Create a new room ==============================================================================
@@ -39,7 +32,6 @@ app.post('/NewRoom', (req, res) => {
         roomName: req.body.roomName,
         fileName: 'ChatRoom' + getRoomID + '.json',
     }
-    
     roomSetting.push(roomSettingObj);
     let roomBody = {
         config: {
@@ -58,12 +50,10 @@ app.post('/NewRoom', (req, res) => {
             
             console.log(err);     
         });    
-
     // Save the new room into a json files named as room + its ID
     fileSystem.writeFile('./server/rooms/' + roomSettingObj.fileName, JSON.stringify(roomBody //debugging
         , null, 2
         ), function(err) {
-            
             console.log(err);     
     });
     res.status(201).end();
@@ -74,7 +64,6 @@ app.get('/RoomList', (req, res) => {
     console.log(req.body);
     res.status(200).send(roomSetting);
 });
-
 // Get into a specific room, room is store in :id
 app.get('/ChatRoom/:id', (req, res) => {
 let incommingRoomId = req.params.id;
@@ -92,23 +81,19 @@ io.on('connection', (socket) => {
     
     //Send all messegnes on the server at once the client is open
     socket.join(incommingRoomId);
-    
     io.to(incommingRoomId).emit('messegnes', currentRoomFile);
 
     // Listen on newMessegnes and send it to all the client
     socket.on('newMessegnes', (data) => {
         console.log('Incomming mess from client');
         console.log(data);
-        
+    
         let chatMessObj = {
             id: JSON.stringify(createID()),
             timeStamp: '', //
             usr: data.outUsr,
             chatMess: data.outChatMess
-        }
-        console.log('chatMess');
-        console.log(chatMessObj);
-        
+        }        
         currentRoomFile.messegnes.push(chatMessObj);
         // Save the movies in an json file
         fileSystem.writeFile('./server/rooms/ChatRoom1.json', JSON.stringify(currentRoomFile //debugging
@@ -121,7 +106,6 @@ io.on('connection', (socket) => {
             socket.join(incommingRoomId).emit('newMessegnes', chatMessObj);
         });
     });
-    
     
     //socket.leave(roomId);
 });
@@ -143,17 +127,7 @@ function createID() {
     
     return countID;
 }
+// Delete a room
+app.delete('/RemoveRoom/:id', (req, res) => { 
 
-
-let chatroomCountID = 0;
-
-let messCountID = 0;
-/*
-// Gets chattmess =================================================
-app.get('/', (req, res) => {    
-    res.send(movieList);
-});
-
-// Create a chatroom & new mess ===============================================
-*/
-   
+})

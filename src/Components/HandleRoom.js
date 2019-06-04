@@ -23,7 +23,10 @@ export function HandleRoom(props) {
           {
             props.roomList.map(obj => {
               return (
-                <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }> { obj.roomName }</Link>
+                <>
+                  <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }>{ obj.roomName }</Link>
+                  <p className="removeRoomBtn" onClick={ props.removeRoom } key={ obj.id } id={ obj.id }>X</p>
+                </>
               );
             })
           }

@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-//import './chatclient.css';
-// import io from 'socket.io-client';
-/* import ScrollToBottom from 'react-scroll-to-bottom';
-import Linkify from 'react-linkify';
-import Emojify from "react-emojione";
-import {emojify} from 'react-emojione'; */
 import {Helmet} from "react-helmet";
-//import { pollWrapper } from 'poll-js';
 
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
@@ -17,23 +10,6 @@ import { ChatRoom } from './Components/ChatRoom.js';
 import { currentRoom$ } from './Components/store.js';
 import { HandleRoom } from './Components/HandleRoom.js';
 import { Header } from './Components/Header.js';
-
-// Main Content =================================================================================================================================
-let listen;
-function MainContent() {
-  const [userName, setUserName ] = useState('');
-  function setYourUserName() {
-
-  }
-  return (
-    <section>
-
-      <aside>
-
-      </aside>
-    </section>
-  );
-}
 
 // MainApp =======================================================================================================================
 function MainApp() {
@@ -46,7 +22,6 @@ function MainApp() {
   const [chatRoomCreatedMess, setChatRoomCreatedMess ] = useState(false);
   const [chatRoomCreatedStr, setChatRoomCreatedStr ] = useState('');
 
-
   useEffect(() => {
     console.log('rgdg');
     
@@ -58,7 +33,7 @@ function MainApp() {
         console.log(res);
         setRoomList(res.data);
       });
-      let subscription = currentRoom$.subscribe((currentRoom) => { 
+      currentRoom$.subscribe((currentRoom) => { 
         if (currentRoom) {
           setShowChatRoom(' - ' + currentRoom);
         }
@@ -75,6 +50,15 @@ function MainApp() {
       setChatRoomCreatedMess(true);
       setChatRoomCreatedStr(res.statusText)
     });
+  }
+  let removeRoom = (e) => {
+    let targetDelBtn = e.target;
+    axios.delete(apiUrl + '/RemoveRoom').
+    then((res) => {
+      console.log(res);
+
+    });
+    
   }
   let setRoomName = (e) => {
     let targetRoom = e.target.value;
@@ -103,6 +87,7 @@ function MainApp() {
               roomList={ roomList }
               chatRoomCreatedMess={ chatRoomCreatedMess }
               chatRoomCreatedStr={ chatRoomCreatedStr }
+              removeRoom={ removeRoom }
               />}
             />
             <Route exact path="/ChatRoom=:id" component={ ChatRoom } />

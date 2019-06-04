@@ -39,7 +39,6 @@ export class ChatRoom extends PureComponent {
     console.log(res);
     
    });
-   console.log('ChatRoom=' + this.pathNameFix(this.props.location.pathname));
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
