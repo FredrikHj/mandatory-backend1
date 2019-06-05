@@ -22,34 +22,31 @@ function MainApp() {
   const [chatRoomCreatedMess, setChatRoomCreatedMess ] = useState(false);
   const [chatRoomCreatedStr, setChatRoomCreatedStr ] = useState('');
 
-  useEffect(() => {
-    console.log('rgdg');
-    
+  useEffect(() => { 
     setApiUrl('http://localhost:3001');
     //setRedirect(false);
-    
-    axios.get('http://localhost:3001/RoomList').
-      then((res) => {
-        console.log(res);
-        setRoomList(res.data);
-      });
-      currentRoom$.subscribe((currentRoom) => { 
-        if (currentRoom) {
-          setShowChatRoom(' - ' + currentRoom);
-        }
-      });
+    getRoomtList();
     }, []);
-    
+    function getRoomtList() {
+      axios.get('http://localhost:3001/RoomList').
+        then((res) => {
+          setRoomList(res.data);
+        });
+        currentRoom$.subscribe((currentRoom) => { 
+          if (currentRoom) {
+            setShowChatRoom(' - ' + currentRoom);
+          }
+        });      
+    }
     function createRoom(){
-      console.log(roomNameStr);
       //if (redirect === true) return <Redirect to="/"/>;
     
     axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
       then((res) => {
-      console.log(res);
       setChatRoomCreatedMess(true);
       setChatRoomCreatedStr(res.statusText)
     });
+    getRoomtList();
   }
   let pathNameFix = (pathName) => {
     let getPathName = pathName.split('=');
@@ -60,22 +57,17 @@ function MainApp() {
     return getFixedPathName;
   }
   let removeRoom = (e) => {
-    
-    let targetDelBtn = e.target.id;
-    console.log(targetDelBtn);
-    axios.delete(apiUrl + '/RemoveRoom/' + targetDelBtn
+    let targetDelBtnId = e.target.id;
+    let targetDelItemIndex = parseInt(e.target.dataset.index);
+    axios.delete(apiUrl + '/RemoveRoom/' + targetDelBtnId
     ).
-    then((res) => {
-      console.log(res);
-
-    });
+    then((res) => {});
+    let newRoomList = [...roomList.slice(0, targetDelItemIndex), ...roomList.slice(targetDelItemIndex + 1)];
+    setRoomList(newRoomList);
   }
   let setRoomName = (e) => {
     let targetRoom = e.target.value;
-    console.log(targetRoom);
-    
     updateRoomNameStr(targetRoom);
-    console.log(showChatRoom);
   }
 
     return (

@@ -60,76 +60,104 @@ app.post('/NewRoom', (req, res) => {
 
 // Show a list with all rooms =====================================================================
 app.get('/RoomList', (req, res) => {
-    console.log(req.body);
     res.status(200).send(roomSetting);
 });
 // Get into a specific room, room is store in :id
 app.get('/ChatRoom/:id', (req, res) => {
 let incommingRoomId = req.params.id;
-console.log(incommingRoomId);
 
 // Creates a connection between the server and my client and listen for mess
 const io = socket(server);
 io.on('connection', (socket) => {
-    console.log('Anslutning upprättad', socket.id);
     let currentRoomFile =  require('./server/rooms/ChatRoom' + incommingRoomId
      + '.json');
-    // test
-    console.log('82');
-    console.log(currentRoomFile);
-    
-    
+   
     //Send all messegnes on the server at once the client is open
     socket.join(incommingRoomId);
     io.to(incommingRoomId).emit('messegnes', currentRoomFile);
 
     // Listen on newMessegnes and send it to all the client
     socket.on('newMessegnes', (data) => {
-        console.log('89');
-           console.log(currentRoomFile);
+        // Datum och tid -------------------------------------------------------------------------------------------
+        let fixDateTime = () => {
+            var today = new Date();
+            
+            //  Visa datum
+            var dd = today.getDate();
+            
+            // Visa månadens namn
+            var month = new Array();
+            
+            month[0] = "Januari";
+            month[1] = "Februari";
+            month[2] = "Mars";
+            month[3] = "April";
+            month[4] = "Maj";
+            month[5] = "Juni";
+            month[6] = "Juli";
+            month[7] = "Augusti";
+            month[8] = "September";
+            month[9] = "Oktober";
+            month[10] = "November";
+            month[11] = "December";
+            
+            var monthnr = new Date();
+            var monthname = month[monthnr.getMonth()];
+            
+            var yyyy = today.getFullYear();
+            let hh = today.getHours();
+            h = checkTime(hh);
+            let mm  = today.getMinutes();
+            m = checkTime(mm);
+
+            function checkTime(i){
+                if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                return i;
+            }
+            return dd + " " + monthname + " " + yyyy + ' | ' + hh + ':' + mm
+        }        
         let chatMessObj = {
             id: JSON.stringify(createID()),
-            timeStamp: '', //
+            timeStamp: fixDateTime(),
             usr: data.outUsr,
             chatMess: data.outChatMess
         }
         // Push the new mes and the user into the file
         currentRoomFile.messegnes.push(chatMessObj);
-        currentRoomFile.config.userTyped.push(data.outUsr);
+        let userTypedObj = {name: data.outUsr};
+        currentRoomFile.config.userTyped.push(userTypedObj);
 
         // Save the movies in an json file
         fileSystem.writeFile('./server/rooms/ChatRoom' + incommingRoomId +'.json', JSON.stringify(currentRoomFile //debugging
             , null, 2
-            ), function(err) {
-                
-                console.log(err);     
-            });       
+            ), function(err) {});       
             // Send the mess on server at once ther is any incommin mess from the client
             socket.join(incommingRoomId).emit('newMessegnes', chatMessObj);
-        });
+    });
         // Set id for the mess ==================
         let countID = 0;
-        function createID() { 
-            console.log('roomfile');
-            console.log(currentRoomFile);
-            
+        function createID() {             
             for (let index = 0; index < currentRoomFile.messegnes.length; index++) {
                 let idMax = currentRoomFile.messegnes[index];
                 countID = idMax.id;
             }
             // Get the last id in my arr of movies
-            console.log('Id innan förändring');
-            console.log(parseInt(countID));
             
-            countID++;
-            console.log('44');
-            console.log(countID);
-            
+            countID++;           
             return countID;
         }
-    });
-    console.log('110');
-    console.log(currentRoomFile);
+    // Listen for who is typing a mess
+    socket.on('typing', (usr) => {
+        let typing = '';
+        if (usr != '') {
+            typing = ' skriver ...'
+        }
+        let usrTyping = usr + typing;
+        socket.broadcast.emit('typing', usrTyping);
+    })
+});
+    // Listen for typing events
+
     //socket.leave(roomId);
 
 });
@@ -137,10 +165,7 @@ io.on('connection', (socket) => {
 // Delete a room
 app.delete('/RemoveRoom/:id', (req, res) => { 
     let incommingRoomIdStr = req.params.id;
-    console.log(typeof incommingRoomIdStr);
-    let incommingRoomIdNr = parseInt(incommingRoomIdStr);
-    console.log(typeof incommingRoomIdNr);
-    
+    let incommingRoomIdNr = parseInt(incommingRoomIdStr);    
     // Remove the setting and the file for the room
     fileSystem.unlink('./server/rooms/ChatRoom' + incommingRoomIdStr +'.json', (err) => {});
    
@@ -149,10 +174,7 @@ app.delete('/RemoveRoom/:id', (req, res) => {
        res.status(400).end();
      return;
     }
-    let indexToRemove = roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);
-    console.log('Index');
-    console.log(indexToRemove);
-    
+    let indexToRemove = roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);  
     if (indexToRemove !== -1) {
         
         // Remove the item in the list

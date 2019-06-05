@@ -26,26 +26,16 @@ export class ChatRoom extends PureComponent {
       incommingMess: [],
       activeChatroom: '',
       userTyped: [],
+      usrCurrentTyping: '',
     }
   }
   componentDidMount() {  
-    let messCount = 0;
-    console.log('Reset');
-
     // Send my room id and name
     axios.get('http://localhost:3001/ChatRoom/' + this.props.pathNameFix(this.props.location.pathname)).
-    then((res) => {
-    console.log(res); 
-   });
+    then((res) => {});
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
-  /*     // Reset the userTypedArr
-      this.setState({
-        userTyped: [],
-      });  */
-      console.log('Incomming Messegnes');
-      console.log(res);
 
       // Update the userTypedArr
       this.setState({
@@ -56,11 +46,14 @@ export class ChatRoom extends PureComponent {
       }
     });
     this.listen.on('newMessegnes', res => {
-      console.log('Incomming newMessegnes');
-      console.log(res);  
         this.messegnesAdd(res);
+         this.setState({
+          userTyped: [ ...this.state.userTyped, {name: res.usr} ],
+        });
     });
     this.listen.on('connection', function(){});
+
+
     let subscription = currentRoom$.subscribe((currentRoom) => { 
       if (currentRoom) {
         this.setState({
@@ -69,9 +62,15 @@ export class ChatRoom extends PureComponent {
       }
     });
   }
-  messegnesAdd = (chatMessObj) => {  
-    console.log('Old mess add with new one');
-    
+  componentDidUpdate() {
+    // listen for another usertyping
+    this.listen.on('typing', (usr) => {
+       this.setState({
+        usrCurrentTyping: usr,
+      });
+    }); 
+  }
+  messegnesAdd = (chatMessObj) => {      
     this.setState({
       incommingMess: [ ...this.state.incommingMess, chatMessObj] 
     });
@@ -83,13 +82,9 @@ export class ChatRoom extends PureComponent {
       outChatMess: this.state.messStr,
     }
     this.listen.emit('newMessegnes', messBody, (data) => {
-      console.log(data);
 
       this.messegnesAdd(data);
-    });
-    
-    console.log(messBody);
-    
+    });    
   }
   changeUsrName = (e) => {       
     this.setState({
@@ -99,11 +94,13 @@ export class ChatRoom extends PureComponent {
   changeMess = (e) => {       
     this.setState({
       messStr: e.target.value,
-    })
+    });
+    let typingUser = this.state.usrName;
+
+    // Send the typing user to server and broadcast it out for the other client who are useing the chat
+    this.listen.emit('typing', typingUser, data => {});   
   }
-  removeLocalstorage = () => {
-    window.localStorage.removeItem('currentRoom');
-  }
+   
   componentWillUnmount() {
     this.listen.on('disconnect', function(){});
   }  
@@ -118,10 +115,15 @@ export class ChatRoom extends PureComponent {
       let getCounter = document.querySelector('#totCounter');
       return getTotLeft;
     }
-  } 
-  render() {
-    console.log(this.state.userTyped);
+  }
+  messRoomListReset = () => {
+    this.setState({
+      incommingMess: [],
+    });
+    window.localStorage.removeItem('currentRoom');
+  }
   
+  render() {  
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -144,24 +146,23 @@ export class ChatRoom extends PureComponent {
                 incommingMess.map(obj => {
                   return (
                     <section className="messContainer" key={ obj.id }>
-                    <header className="messHeader">
-                      <p>{ obj.usr }</p> 
-                    </header>
-                    <div className="messContent" >
-                      <Linkify>
-                        <Emojify style={{height: 30, width: 30}}>
-                          { obj.chatMess }
+                      <header className="messHeader">
+                        <p>{ obj.usr }</p> <p>{ obj.timeStamp }</p>
+                      </header>
+                      <div className="messContent" >
+                        <Linkify>
+                          <Emojify style={{height: 30, width: 30}}>
+                            { obj.chatMess }
 
-                        </Emojify>
-                      </Linkify>
-                    </div>
-
+                          </Emojify>
+                        </Linkify>
+                      </div>
                     </section>
-
                   );
                 }) : <p>Meddelanden laddas ....</p>
               }
             </ScrollToBottom>
+            <div id="usrTypingStatus">{ this.state.usrCurrentTyping }</div>
             <hr className="middleLine"/>
           </fieldset>
           <fieldset id="messagneSend">
@@ -172,7 +173,7 @@ export class ChatRoom extends PureComponent {
           </fieldset>
           <section id="changeRoomContainer">
             <p id="changeRoomHeadline">
-            <Link className="button" to={ '/'} onClick={ this.removeLocalstorage }>Hantera rum</Link>
+            <Link className="button" to={ '/'} onClick={ this.messRoomListReset }>Hantera rum</Link>
             </p>
 
           </section>

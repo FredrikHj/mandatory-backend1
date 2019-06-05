@@ -1,32 +1,407 @@
 {
   "config": {
     "id": "7",
-    "name": "Fredrik7",
+    "name": "Fredrik1",
     "userTyped": [
-      "efewfe",
-      "efewfe"
+      {
+        "name": ""
+      },
+      {
+        "name": ""
+      },
+      {
+        "name": "htr"
+      },
+      {
+        "name": "htr"
+      },
+      {
+        "name": "effe"
+      },
+      {
+        "name": "<efss"
+      },
+      {
+        "name": "r"
+      },
+      {
+        "name": "r"
+      },
+      {
+        "name": "fi"
+      },
+      {
+        "name": "gng v"
+      },
+      {
+        "name": "htf"
+      },
+      {
+        "name": "bfgdb"
+      },
+      {
+        "name": "thtrhth"
+      },
+      {
+        "name": "vdsv"
+      },
+      {
+        "name": "dvs"
+      },
+      {
+        "name": "dvs"
+      },
+      {
+        "name": "cdsa"
+      },
+      {
+        "name": "v<ds"
+      },
+      {
+        "name": "fe"
+      },
+      {
+        "name": "fvd<s"
+      },
+      {
+        "name": "VDV"
+      },
+      {
+        "name": "scac"
+      },
+      {
+        "name": "fesf"
+      },
+      {
+        "name": "fesf"
+      },
+      {
+        "name": "uy"
+      },
+      {
+        "name": ""
+      },
+      {
+        "name": "rgeg"
+      },
+      {
+        "name": "rgeg"
+      },
+      {
+        "name": "gfn"
+      },
+      {
+        "name": "efsfe"
+      },
+      {
+        "name": "efsfe"
+      },
+      {
+        "name": "efsfe"
+      },
+      {
+        "name": "efsfe"
+      },
+      {
+        "name": "ef"
+      },
+      {
+        "name": "ef"
+      },
+      {
+        "name": ""
+      },
+      {
+        "name": "hgm"
+      },
+      {
+        "name": ""
+      },
+      {
+        "name": "effe"
+      },
+      {
+        "name": "bgf"
+      },
+      {
+        "name": "bgf"
+      },
+      {
+        "name": ""
+      },
+      {
+        "name": "rgr"
+      },
+      {
+        "name": ""
+      }
     ],
-    "status": "",
     "content-type": ""
   },
   "messegnes": [
     {
       "id": "1",
       "timeStamp": "",
-      "usr": "dwqwd",
-      "chatMess": "efw"
+      "usr": "",
+      "chatMess": "etjty"
     },
     {
       "id": "2",
       "timeStamp": "",
-      "usr": "efewfe",
-      "chatMess": "gvrg"
+      "usr": "",
+      "chatMess": "etjty"
     },
     {
       "id": "3",
       "timeStamp": "",
-      "usr": "efewfe",
-      "chatMess": "gvrg"
+      "usr": "htr",
+      "chatMess": "etjty"
+    },
+    {
+      "id": "4",
+      "timeStamp": "",
+      "usr": "htr",
+      "chatMess": "etjty"
+    },
+    {
+      "id": "5",
+      "timeStamp": "",
+      "usr": "effe",
+      "chatMess": "fefef"
+    },
+    {
+      "id": "6",
+      "timeStamp": "",
+      "usr": "<efss",
+      "chatMess": "sdvs"
+    },
+    {
+      "id": "7",
+      "timeStamp": "",
+      "usr": "r",
+      "chatMess": ":)"
+    },
+    {
+      "id": "8",
+      "timeStamp": "",
+      "usr": "r",
+      "chatMess": ";)"
+    },
+    {
+      "id": "9",
+      "timeStamp": "",
+      "usr": "fi",
+      "chatMess": "7tut"
+    },
+    {
+      "id": "10",
+      "timeStamp": "",
+      "usr": "gng v",
+      "chatMess": "jb,"
+    },
+    {
+      "id": "11",
+      "timeStamp": "",
+      "usr": "htf",
+      "chatMess": "htfgh"
+    },
+    {
+      "id": "12",
+      "timeStamp": "",
+      "usr": "bfgdb",
+      "chatMess": "vrsv"
+    },
+    {
+      "id": "13",
+      "timeStamp": "",
+      "usr": "thtrhth",
+      "chatMess": "yhf"
+    },
+    {
+      "id": "14",
+      "timeStamp": "",
+      "usr": "vdsv",
+      "chatMess": "fvdv"
+    },
+    {
+      "id": "15",
+      "timeStamp": "",
+      "usr": "dvs",
+      "chatMess": "fvdsfv"
+    },
+    {
+      "id": "16",
+      "timeStamp": "",
+      "usr": "dvs",
+      "chatMess": "fvdsfv"
+    },
+    {
+      "id": "17",
+      "timeStamp": "",
+      "usr": "cdsa",
+      "chatMess": "dscds"
+    },
+    {
+      "id": "18",
+      "timeStamp": "5 Juni 2019 | 16:59",
+      "usr": "v<ds",
+      "chatMess": "dvs"
+    },
+    {
+      "id": "19",
+      "timeStamp": "5 Juni 2019 | 17:03",
+      "usr": "fe",
+      "chatMess": "gbfb"
+    },
+    {
+      "id": "20",
+      "timeStamp": "5 Juni 2019 | 17:14",
+      "usr": "fvd<s",
+      "chatMess": "dsv"
+    },
+    {
+      "id": "21",
+      "timeStamp": "5 Juni 2019 | 20:0",
+      "usr": "VDV",
+      "chatMess": "FVDDV"
+    },
+    {
+      "id": "22",
+      "timeStamp": "5 Juni 2019 | 21:32",
+      "usr": "scac",
+      "chatMess": "dvdsvcsacefwewfewfefewfew"
+    },
+    {
+      "id": "23",
+      "timeStamp": "5 Juni 2019 | 21:38",
+      "usr": "fesf",
+      "chatMess": "feweffefeff"
+    },
+    {
+      "id": "24",
+      "timeStamp": "5 Juni 2019 | 21:38",
+      "usr": "fesf",
+      "chatMess": "feweffefeff"
+    },
+    {
+      "id": "25",
+      "timeStamp": "5 Juni 2019 | 21:51",
+      "usr": "uy",
+      "chatMess": "ukyukuuku"
+    },
+    {
+      "id": "26",
+      "timeStamp": "5 Juni 2019 | 21:52",
+      "usr": "",
+      "chatMess": ""
+    },
+    {
+      "id": "27",
+      "timeStamp": "5 Juni 2019 | 21:56",
+      "usr": "rgeg",
+      "chatMess": "reg"
+    },
+    {
+      "id": "28",
+      "timeStamp": "5 Juni 2019 | 21:56",
+      "usr": "rgeg",
+      "chatMess": "reg"
+    },
+    {
+      "id": "29",
+      "timeStamp": "5 Juni 2019 | 21:57",
+      "usr": "gfn",
+      "chatMess": "gxfnx"
+    },
+    {
+      "id": "30",
+      "timeStamp": "5 Juni 2019 | 22:11",
+      "usr": "efsfe",
+      "chatMess": "vdfs"
+    },
+    {
+      "id": "31",
+      "timeStamp": "5 Juni 2019 | 22:11",
+      "usr": "efsfe",
+      "chatMess": "vdfs"
+    },
+    {
+      "id": "32",
+      "timeStamp": "5 Juni 2019 | 22:11",
+      "usr": "efsfe",
+      "chatMess": "vdfs"
+    },
+    {
+      "id": "33",
+      "timeStamp": "5 Juni 2019 | 22:11",
+      "usr": "efsfe",
+      "chatMess": "\n"
+    },
+    {
+      "id": "34",
+      "timeStamp": "5 Juni 2019 | 22:13",
+      "usr": "ef",
+      "chatMess": "efeffef"
+    },
+    {
+      "id": "35",
+      "timeStamp": "5 Juni 2019 | 22:13",
+      "usr": "ef",
+      "chatMess": "efeffef"
+    },
+    {
+      "id": "36",
+      "timeStamp": "5 Juni 2019 | 22:14",
+      "usr": "",
+      "chatMess": ""
+    },
+    {
+      "id": "37",
+      "timeStamp": "5 Juni 2019 | 22:49",
+      "usr": "hgm",
+      "chatMess": "mhghmg"
+    },
+    {
+      "id": "38",
+      "timeStamp": "5 Juni 2019 | 22:50",
+      "usr": "",
+      "chatMess": ""
+    },
+    {
+      "id": "39",
+      "timeStamp": "5 Juni 2019 | 22:53",
+      "usr": "effe",
+      "chatMess": "evsvdsvd"
+    },
+    {
+      "id": "40",
+      "timeStamp": "5 Juni 2019 | 22:59",
+      "usr": "bgf",
+      "chatMess": "gfnbgfbdfbbdfgbfdb"
+    },
+    {
+      "id": "41",
+      "timeStamp": "5 Juni 2019 | 22:59",
+      "usr": "bgf",
+      "chatMess": "gfnbgfbdfbbdfgbfdb"
+    },
+    {
+      "id": "42",
+      "timeStamp": "5 Juni 2019 | 22:59",
+      "usr": "",
+      "chatMess": ""
+    },
+    {
+      "id": "43",
+      "timeStamp": "5 Juni 2019 | 23:8",
+      "usr": "rgr",
+      "chatMess": "edgsbfddfb"
+    },
+    {
+      "id": "44",
+      "timeStamp": "5 Juni 2019 | 23:8",
+      "usr": "",
+      "chatMess": "öä''äö'"
     }
   ]
 }
