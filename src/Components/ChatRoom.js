@@ -123,27 +123,27 @@ export class ChatRoom extends PureComponent {
     window.localStorage.removeItem('currentRoom');
   }
   removeMess = (e) => {
-
-    let targetDelBtInRoomId = e.target.dataset.room;
-    console.log(targetDelBtInRoomId);
-    
     let targetDelBntMessIndex = parseInt(e.target.dataset.index);
     console.log(targetDelBntMessIndex);
-    axios.delete(this.props.apiUrl + '/RemoveMess/' + targetDelBtInRoomId + '=' + targetDelBntMessIndex
+    
+    let targetDelBtInRoomId = e.target.dataset.room;
+    let targetDelBntMessId = e.target.id;
+    
+     axios.delete(this.props.apiUrl + '/RemoveMess/' + targetDelBtInRoomId + '=' + targetDelBntMessId
     ).
     then((res) => {});
     let newMessList = [...this.state.incommingMess.slice(0, targetDelBntMessIndex), ...this.state.incommingMess.slice(targetDelBntMessIndex + 1)];
     this.setState({
      incommingMess: newMessList,
     });
-  }
+  } 
   fixServerRoomId = () => {
     let getRoomId = this.props.location.pathname.split('=')[1].split('_')[0];
-    console.log(getRoomId);
     return getRoomId;
     
   }
-  render() {     
+  render() {  
+    console.log(this.state.incommingMess);
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -167,8 +167,8 @@ export class ChatRoom extends PureComponent {
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">
-                        <p>{ obj.usr }</p> <p>{ obj.timeStamp }</p> 
-                        <p className="removeMessBtn" onClick={ this.removeMess } id={ obj.id } data-index={ count } data-room={ this.fixServerRoomId() }>X</p>
+                        <p className="messCountedId">{ obj.id + ',)' }</p><p>{ obj.usr }</p> <p>{ obj.timeStamp }</p> 
+                        <p className="removeMessBtn" onClick={ this.removeMess } id={ obj.id } data-room={ this.fixServerRoomId() } data-index={ count }>X</p>
                       </header>
                       <div className="messContent" >
                         <Linkify>

@@ -129,6 +129,9 @@ fieldset{
   border-bottom: 2px solid black;
   height: 34px;
 }
+.messCountedId{
+  width: 10px;
+}
 .timeDate{
   margin-left: 150px;
 }

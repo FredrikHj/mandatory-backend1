@@ -12,6 +12,7 @@ const port = 3001;
 const server = app.listen(port, () =>  console.log(`Chatserver is listening on port ${port}!`));
 
 // Create a chatRoom
+let countID = 0;
 let roomId  = () => { 
     for (let index = 0; index < roomSetting.length; index++) {
         let idMax = roomSetting[index];
@@ -171,16 +172,19 @@ app.delete('/RemoveRoom/:id', (req, res) => {
    
     // Verify if ID
     if (!incommingRoomIdNr) {
-       res.status(400).end();
-     return;
+        res.status(400).end();
+        return;
     }
     let indexToRemove = roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);  
+    console.log('Delete room: ');
+    console.log(indexToRemove);
     if (indexToRemove !== -1) {
-        
         // Remove the item in the list
         roomSetting.splice(indexToRemove, 1);
-    }
+        console.log('184');
+        console.log(roomSetting);
 
+    }
     // Save the new room list back to its json file
     fileSystem.writeFile('./server/roomSetting.json', JSON.stringify(roomSetting //debugging
         , null, 2
@@ -196,33 +200,33 @@ app.delete('/RemoveRoom/:id', (req, res) => {
 })
 // Delete a mess
 app.delete('/RemoveMess/:id', (req, res) => { 
-
+    console.log(req.params.id);
+    
     let incommingRoomIdStr = req.params.id.split('=')[0];
     let incommingMessIndexNr = parseInt(req.params.id.split('=')[1]);
-    console.log(incommingRoomIdStr);
-    console.log(incommingMessIndexNr);
-
+ 
+    
     let chatRoomFile = 'ChatRoom' + incommingRoomIdStr + '.json';
-    console.log(chatRoomFile);
     
     let chatRoomFileObj = require('./server/rooms/ChatRoom' + incommingRoomIdStr + '.json');
-    let messPlace = chatRoomFileObj.messegnes;
     
     // Verify if ID
     if (!incommingMessIndexNr) {
        res.status(400).end();
-     return;
+       return;
     }
-    let indexToRemove = messPlace.findIndex(MessIndex => parseInt(MessIndex.id) === incommingMessIndexNr);  
+    let indexToRemove = chatRoomFileObj.messegnes.findIndex(messIndex => parseInt(messIndex.id) === incommingMessIndexNr);
+    console.log('Delete mess: ');
+    console.log(indexToRemove);
     if (indexToRemove !== -1) {
-        
         // Remove the item in the list
-        messPlace.splice(incommingMessIndexNr, 1);
-        console.log(messPlace);
-        
+        chatRoomFileObj.messegnes.splice(indexToRemove, 1);
+        //chatRoomFileObj.messegnes.splice(indexToRemove, 1);
+        console.log('221');
+        console.log(chatRoomFileObj.messegnes);
     }
     // Save the new messlist back to its json file
-    fileSystem.writeFile('./server/rooms' + chatRoomFile, JSON.stringify(messPlace //debugging
+    fileSystem.writeFile('./server/rooms/' + chatRoomFile, JSON.stringify(chatRoomFileObj //debugging
         , null, 2
         ), function(err) {
             if (err) {
