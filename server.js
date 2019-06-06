@@ -23,7 +23,7 @@ let roomId  = () => {
     return countID;
 }
 // Create a new room ==============================================================================
-let roomSetting =  require('./server/roomSetting.json');
+let roomSetting = require('./server/roomSetting.json');
 app.post('/NewRoom', (req, res) => {
     let getRoomID = JSON.stringify(roomId()); // -1 = Give the room correct ID
 
@@ -181,8 +181,48 @@ app.delete('/RemoveRoom/:id', (req, res) => {
         roomSetting.splice(indexToRemove, 1);
     }
 
-    // Save the new room bak to its json file
+    // Save the new room list back to its json file
     fileSystem.writeFile('./server/roomSetting.json', JSON.stringify(roomSetting //debugging
+        , null, 2
+        ), function(err) {
+            if (err) {
+                console.log(err);
+                res.status(204);
+                return;
+            }   
+    });
+            
+    res.status(204).end();
+})
+// Delete a mess
+app.delete('/RemoveMess/:id', (req, res) => { 
+
+    let incommingRoomIdStr = req.params.id.split('=')[0];
+    let incommingMessIndexNr = parseInt(req.params.id.split('=')[1]);
+    console.log(incommingRoomIdStr);
+    console.log(incommingMessIndexNr);
+
+    let chatRoomFile = 'ChatRoom' + incommingRoomIdStr + '.json';
+    console.log(chatRoomFile);
+    
+    let chatRoomFileObj = require('./server/rooms/ChatRoom' + incommingRoomIdStr + '.json');
+    let messPlace = chatRoomFileObj.messegnes;
+    
+    // Verify if ID
+    if (!incommingMessIndexNr) {
+       res.status(400).end();
+     return;
+    }
+    let indexToRemove = messPlace.findIndex(MessIndex => parseInt(MessIndex.id) === incommingMessIndexNr);  
+    if (indexToRemove !== -1) {
+        
+        // Remove the item in the list
+        messPlace.splice(incommingMessIndexNr, 1);
+        console.log(messPlace);
+        
+    }
+    // Save the new messlist back to its json file
+    fileSystem.writeFile('./server/rooms' + chatRoomFile, JSON.stringify(messPlace //debugging
         , null, 2
         ), function(err) {
             if (err) {

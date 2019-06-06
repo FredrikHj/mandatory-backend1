@@ -69,37 +69,37 @@ function MainApp() {
     let targetRoom = e.target.value;
     updateRoomNameStr(targetRoom);
   }
-
-    return (
-      <>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{ 'Chatklient' + showChatRoom } </title>
-        </Helmet>
-        <header id="header">
-          <Header
+  return (
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{ 'Chatklient' + showChatRoom } </title>
+      </Helmet>
+      <header id="header">
+        <Header
+        />
+      </header>
+      <main id="mainContainer">
+        <Router>
+        
+          <Route exact path="/" render={(props) => <HandleRoom {...props}
+            setRoomName={ setRoomName }
+            createRoom= { createRoom }
+            roomList={ roomList }
+            chatRoomCreatedMess={ chatRoomCreatedMess }
+            chatRoomCreatedStr={ chatRoomCreatedStr }
+            removeRoom={ removeRoom }
+            pathNameFix={ pathNameFix }
+            />}
           />
-        </header>
-        <main id="mainContainer">
-          <Router>
-          
-            <Route exact path="/" render={(props) => <HandleRoom {...props}
-              setRoomName={ setRoomName }
-              createRoom= { createRoom }
-              roomList={ roomList }
-              chatRoomCreatedMess={ chatRoomCreatedMess }
-              chatRoomCreatedStr={ chatRoomCreatedStr }
-              removeRoom={ removeRoom }
-              pathNameFix={ pathNameFix }
-              />}
-            />
-            <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}
-              pathNameFix={ pathNameFix }
-              />}
-            />
-          </Router>
-        </main>
-      </>
+          <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}
+            pathNameFix={ pathNameFix }
+            apiUrl={ apiUrl }
+            />}
+          />
+        </Router>
+      </main>
+    </>
   );
 }
 

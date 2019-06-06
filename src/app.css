@@ -132,6 +132,14 @@ fieldset{
 .timeDate{
   margin-left: 150px;
 }
+.removeMessBtn{
+  position: relative;
+  left: -20px;
+  top: 2px;
+  color: red;
+  background: none;
+  border: none;
+}
 .messContent{
   margin-top: 6px;
   width: 100%;

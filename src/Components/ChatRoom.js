@@ -122,8 +122,28 @@ export class ChatRoom extends PureComponent {
     });
     window.localStorage.removeItem('currentRoom');
   }
-  
-  render() {  
+  removeMess = (e) => {
+
+    let targetDelBtInRoomId = e.target.dataset.room;
+    console.log(targetDelBtInRoomId);
+    
+    let targetDelBntMessIndex = parseInt(e.target.dataset.index);
+    console.log(targetDelBntMessIndex);
+    axios.delete(this.props.apiUrl + '/RemoveMess/' + targetDelBtInRoomId + '=' + targetDelBntMessIndex
+    ).
+    then((res) => {});
+    let newMessList = [...this.state.incommingMess.slice(0, targetDelBntMessIndex), ...this.state.incommingMess.slice(targetDelBntMessIndex + 1)];
+    this.setState({
+     incommingMess: newMessList,
+    });
+  }
+  fixServerRoomId = () => {
+    let getRoomId = this.props.location.pathname.split('=')[1].split('_')[0];
+    console.log(getRoomId);
+    return getRoomId;
+    
+  }
+  render() {     
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -143,11 +163,12 @@ export class ChatRoom extends PureComponent {
           <legend id="chatRoomHedline">Meddelanden</legend>            
             <ScrollToBottom className="messagnesReceive">
               {(incommingMess.length != 0) ? 
-                incommingMess.map(obj => {
+                incommingMess.map((obj, count) => {
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">
-                        <p>{ obj.usr }</p> <p>{ obj.timeStamp }</p>
+                        <p>{ obj.usr }</p> <p>{ obj.timeStamp }</p> 
+                        <p className="removeMessBtn" onClick={ this.removeMess } id={ obj.id } data-index={ count } data-room={ this.fixServerRoomId() }>X</p>
                       </header>
                       <div className="messContent" >
                         <Linkify>
