@@ -129,12 +129,31 @@ fieldset{
   border-bottom: 2px solid black;
   height: 34px;
 }
+.messCountedId{
+  width: 10px;
+}
+.timeDate{
+  margin-left: 150px;
+}
+.removeMessBtn{
+  position: relative;
+  left: -20px;
+  top: 2px;
+  color: red;
+  background: none;
+  border: none;
+}
 .messContent{
   margin-top: 6px;
   width: 100%;
   word-break: break-all;
 }
-#middleLine{
+#usrTypingStatus{
+  margin-top: 6px;
+  height: 23px;
+}
+.middleLine{
+  margin-top: -2px;
   width: 100%;
   height: 3px;
   background-color: grey;
@@ -185,8 +204,15 @@ fieldset{
   width: 95px;
   position: relative;
 }
-/* UserTyped  =========================================*/
 
+/* UserTyped  =========================================*/
+#userList{
+  position: absolute;
+    left: 300px;
+    color: white;
+    height: 154px;
+    overflow-y: auto;
+}
 
 
 
@@ -269,11 +295,7 @@ aside{
   margin-top: 0px;
 }
 
-#userList{
-  position: absolute;
-  left: 300px;
-  color: white;
-}
+
 #userList li{
   list-style-type: none;
 }

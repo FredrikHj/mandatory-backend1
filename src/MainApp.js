@@ -7,7 +7,7 @@ import {Helmet} from "react-helmet";
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 import { ChatRoom } from './Components/ChatRoom.js';
-import { currentRoom$ } from './Components/store.js';
+import { currentRoom$, updateCurrentRoom } from './Components/store.js';
 import { HandleRoom } from './Components/HandleRoom.js';
 import { Header } from './Components/Header.js';
 
@@ -22,78 +22,84 @@ function MainApp() {
   const [chatRoomCreatedMess, setChatRoomCreatedMess ] = useState(false);
   const [chatRoomCreatedStr, setChatRoomCreatedStr ] = useState('');
 
-  useEffect(() => {
-    console.log('rgdg');
-    
+  useEffect(() => { 
     setApiUrl('http://localhost:3001');
     //setRedirect(false);
-    
-    axios.get('http://localhost:3001/RoomList').
-      then((res) => {
-        console.log(res);
-        setRoomList(res.data);
-      });
-      currentRoom$.subscribe((currentRoom) => { 
-        if (currentRoom) {
-          setShowChatRoom(' - ' + currentRoom);
-        }
-      });
+    getRoomtList();
     }, []);
-    
+    function getRoomtList() {
+      axios.get('http://localhost:3001/RoomList').
+        then((res) => {
+          setRoomList(res.data);
+        });
+        currentRoom$.subscribe((currentRoom) => { 
+          if (currentRoom) {
+            setShowChatRoom(' - ' + currentRoom);
+          }
+        });      
+    }
     function createRoom(){
-      console.log(roomNameStr);
       //if (redirect === true) return <Redirect to="/"/>;
     
     axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
       then((res) => {
-      console.log(res);
       setChatRoomCreatedMess(true);
       setChatRoomCreatedStr(res.statusText)
     });
+    getRoomtList();
+  }
+  let pathNameFix = (pathName) => {
+    let getPathName = pathName.split('=');
+    let getFixedPathName = getPathName[1].split('_')[0];
+    
+    updateCurrentRoom(getPathName[1]);
+    window.localStorage.setItem('currentRoom', getPathName);    
+    return getFixedPathName;
   }
   let removeRoom = (e) => {
-    let targetDelBtn = e.target;
-    axios.delete(apiUrl + '/RemoveRoom').
-    then((res) => {
-      console.log(res);
-
-    });
-    
+    let targetDelBtnId = e.target.id;
+    let targetDelItemIndex = parseInt(e.target.dataset.index);
+    axios.delete(apiUrl + '/RemoveRoom/' + targetDelBtnId
+    ).
+    then((res) => {});
+    let newRoomList = [...roomList.slice(0, targetDelItemIndex), ...roomList.slice(targetDelItemIndex + 1)];
+    setRoomList(newRoomList);
   }
   let setRoomName = (e) => {
     let targetRoom = e.target.value;
-    console.log(targetRoom);
-    
     updateRoomNameStr(targetRoom);
-    console.log(showChatRoom);
   }
-  
-    return (
-      <>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{ 'Chatklient' + showChatRoom } </title>
-        </Helmet>
-        <header id="header">
-          <Header
+  return (
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{ 'Chatklient' + showChatRoom } </title>
+      </Helmet>
+      <header id="header">
+        <Header
+        />
+      </header>
+      <main id="mainContainer">
+        <Router>
+        
+          <Route exact path="/" render={(props) => <HandleRoom {...props}
+            setRoomName={ setRoomName }
+            createRoom= { createRoom }
+            roomList={ roomList }
+            chatRoomCreatedMess={ chatRoomCreatedMess }
+            chatRoomCreatedStr={ chatRoomCreatedStr }
+            removeRoom={ removeRoom }
+            pathNameFix={ pathNameFix }
+            />}
           />
-        </header>
-        <main id="mainContainer">
-          <Router>
-          
-            <Route exact path="/" render={(props) => <HandleRoom {...props}
-              setRoomName={ setRoomName }
-              createRoom= { createRoom }
-              roomList={ roomList }
-              chatRoomCreatedMess={ chatRoomCreatedMess }
-              chatRoomCreatedStr={ chatRoomCreatedStr }
-              removeRoom={ removeRoom }
-              />}
-            />
-            <Route exact path="/ChatRoom=:id" component={ ChatRoom } />
-          </Router>
-        </main>
-      </>
+          <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}
+            pathNameFix={ pathNameFix }
+            apiUrl={ apiUrl }
+            />}
+          />
+        </Router>
+      </main>
+    </>
   );
 }
 

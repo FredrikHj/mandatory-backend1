@@ -12,18 +12,17 @@ export function UserName(props) {
     </section>
   );
 }
-export function UserTyped() {
-    const [userName, setUserName ] = useState('');
-  function setYourUserName() {
-  
-   }
+export function UserTyped(props) {
   return (
     <section id="userList">
       <ul> <p id="userTyped">Dessa har skrivit</p>
-        <li>grfeg</li>
-        <li>grfeg</li>
-        <li>grfeg</li>
-        <li>grfeg</li>
+       {(props.userTyped.length != 0) ?
+          props.userTyped.map((userTyped, count) => {
+            return(
+              <li key={ count }>{ userTyped.name }</li>
+            );
+          }) : 'Listan laddas ...'
+        }
       </ul>
     </section>
   );

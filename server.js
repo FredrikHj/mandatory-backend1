@@ -12,6 +12,7 @@ const port = 3001;
 const server = app.listen(port, () =>  console.log(`Chatserver is listening on port ${port}!`));
 
 // Create a chatRoom
+let countID = 0;
 let roomId  = () => { 
     for (let index = 0; index < roomSetting.length; index++) {
         let idMax = roomSetting[index];
@@ -23,7 +24,7 @@ let roomId  = () => {
     return countID;
 }
 // Create a new room ==============================================================================
-let roomSetting =  require('./server/roomSetting.json');
+let roomSetting = require('./server/roomSetting.json');
 app.post('/NewRoom', (req, res) => {
     let getRoomID = JSON.stringify(roomId()); // -1 = Give the room correct ID
 
@@ -38,7 +39,6 @@ app.post('/NewRoom', (req, res) => {
             id: getRoomID, 
             name: req.body.roomName,
             userTyped: [],
-            "status": "",
             "content-type": "",
         },
         messegnes: [],
@@ -61,73 +61,180 @@ app.post('/NewRoom', (req, res) => {
 
 // Show a list with all rooms =====================================================================
 app.get('/RoomList', (req, res) => {
-    console.log(req.body);
     res.status(200).send(roomSetting);
 });
 // Get into a specific room, room is store in :id
 app.get('/ChatRoom/:id', (req, res) => {
 let incommingRoomId = req.params.id;
-console.log(incommingRoomId);
 
 // Creates a connection between the server and my client and listen for mess
 const io = socket(server);
 io.on('connection', (socket) => {
-    console.log('Anslutning upprättad', socket.id);
-    let currentRoomFile =  require('./server/rooms/ChatRoom' + incommingRoomId + '.json');
-    // test
-    console.log('82');
-    console.log('ChatRoom' + incommingRoomId);
-    
-    
+    let currentRoomFile =  require('./server/rooms/ChatRoom' + incommingRoomId
+     + '.json');
+   
     //Send all messegnes on the server at once the client is open
     socket.join(incommingRoomId);
     io.to(incommingRoomId).emit('messegnes', currentRoomFile);
 
     // Listen on newMessegnes and send it to all the client
     socket.on('newMessegnes', (data) => {
-        console.log('Incomming mess from client');
-        console.log(data);
-    
+        // Datum och tid -------------------------------------------------------------------------------------------
+        let fixDateTime = () => {
+            var today = new Date();
+            
+            //  Visa datum
+            var dd = today.getDate();
+            
+            // Visa månadens namn
+            var month = new Array();
+            
+            month[0] = "Januari";
+            month[1] = "Februari";
+            month[2] = "Mars";
+            month[3] = "April";
+            month[4] = "Maj";
+            month[5] = "Juni";
+            month[6] = "Juli";
+            month[7] = "Augusti";
+            month[8] = "September";
+            month[9] = "Oktober";
+            month[10] = "November";
+            month[11] = "December";
+            
+            var monthnr = new Date();
+            var monthname = month[monthnr.getMonth()];
+            
+            var yyyy = today.getFullYear();
+            let hh = today.getHours();
+            h = checkTime(hh);
+            let mm  = today.getMinutes();
+            m = checkTime(mm);
+
+            function checkTime(i){
+                if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                return i;
+            }
+            return dd + " " + monthname + " " + yyyy + ' | ' + hh + ':' + mm
+        }        
         let chatMessObj = {
             id: JSON.stringify(createID()),
-            timeStamp: '', //
+            timeStamp: fixDateTime(),
             usr: data.outUsr,
             chatMess: data.outChatMess
-        }        
+        }
+        // Push the new mes and the user into the file
         currentRoomFile.messegnes.push(chatMessObj);
+        let userTypedObj = {name: data.outUsr};
+        currentRoomFile.config.userTyped.push(userTypedObj);
+
         // Save the movies in an json file
-        fileSystem.writeFile('./server/rooms/ChatRoom1.json', JSON.stringify(currentRoomFile //debugging
+        fileSystem.writeFile('./server/rooms/ChatRoom' + incommingRoomId +'.json', JSON.stringify(currentRoomFile //debugging
             , null, 2
-            ), function(err) {
-                
-                console.log(err);     
-            });       
+            ), function(err) {});       
             // Send the mess on server at once ther is any incommin mess from the client
             socket.join(incommingRoomId).emit('newMessegnes', chatMessObj);
-        });
     });
-    
+        // Set id for the mess ==================
+        let countID = 0;
+        function createID() {             
+            for (let index = 0; index < currentRoomFile.messegnes.length; index++) {
+                let idMax = currentRoomFile.messegnes[index];
+                countID = idMax.id;
+            }
+            // Get the last id in my arr of movies
+            
+            countID++;           
+            return countID;
+        }
+    // Listen for who is typing a mess
+    socket.on('typing', (usr) => {
+        let typing = '';
+        if (usr != '') {
+            typing = ' skriver ...'
+        }
+        let usrTyping = usr + typing;
+        socket.broadcast.emit('typing', usrTyping);
+    })
+});
+    // Listen for typing events
+
     //socket.leave(roomId);
+
 });
     
-// Set id for the mess ==================
-let countID = 0;
-function createID() { 
-    for (let index = 0; index < currentRoomFile.messegnes.length; index++) {
-        let idMax = currentRoomFile.messegnes[index];
-        countID = idMax.id;
-    }
-    // Get the last id in my arr of movies
-    console.log('Id innan förändring');
-    console.log(parseInt(countID));
-    
-    countID++;
-    console.log('44');
-    console.log(countID);
-    
-    return countID;
-}
 // Delete a room
 app.delete('/RemoveRoom/:id', (req, res) => { 
+    let incommingRoomIdStr = req.params.id;
+    let incommingRoomIdNr = parseInt(incommingRoomIdStr);    
+    // Remove the setting and the file for the room
+    fileSystem.unlink('./server/rooms/ChatRoom' + incommingRoomIdStr +'.json', (err) => {});
+   
+    // Verify if ID
+    if (!incommingRoomIdNr) {
+        res.status(400).end();
+        return;
+    }
+    let indexToRemove = roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);  
+    console.log('Delete room: ');
+    console.log(indexToRemove);
+    if (indexToRemove !== -1) {
+        // Remove the item in the list
+        roomSetting.splice(indexToRemove, 1);
+        console.log('184');
+        console.log(roomSetting);
 
+    }
+    // Save the new room list back to its json file
+    fileSystem.writeFile('./server/roomSetting.json', JSON.stringify(roomSetting //debugging
+        , null, 2
+        ), function(err) {
+            if (err) {
+                console.log(err);
+                res.status(204);
+                return;
+            }   
+    });
+            
+    res.status(204).end();
+})
+// Delete a mess
+app.delete('/RemoveMess/:id', (req, res) => { 
+    console.log(req.params.id);
+    
+    let incommingRoomIdStr = req.params.id.split('=')[0];
+    let incommingMessIndexNr = parseInt(req.params.id.split('=')[1]);
+ 
+    
+    let chatRoomFile = 'ChatRoom' + incommingRoomIdStr + '.json';
+    
+    let chatRoomFileObj = require('./server/rooms/ChatRoom' + incommingRoomIdStr + '.json');
+    
+    // Verify if ID
+    if (!incommingMessIndexNr) {
+       res.status(400).end();
+       return;
+    }
+    let indexToRemove = chatRoomFileObj.messegnes.findIndex(messIndex => parseInt(messIndex.id) === incommingMessIndexNr);
+    console.log('Delete mess: ');
+    console.log(indexToRemove);
+    if (indexToRemove !== -1) {
+        // Remove the item in the list
+        chatRoomFileObj.messegnes.splice(indexToRemove, 1);
+        //chatRoomFileObj.messegnes.splice(indexToRemove, 1);
+        console.log('221');
+        console.log(chatRoomFileObj.messegnes);
+    }
+    // Save the new messlist back to its json file
+    fileSystem.writeFile('./server/rooms/' + chatRoomFile, JSON.stringify(chatRoomFileObj //debugging
+        , null, 2
+        ), function(err) {
+            if (err) {
+                console.log(err);
+                res.status(204);
+                return;
+            }   
+    });
+            
+    res.status(204).end();
 })
