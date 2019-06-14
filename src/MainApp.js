@@ -36,7 +36,7 @@ function MainApp() {
           if (currentRoom) {
             setShowChatRoom(' - ' + currentRoom);
           }
-        });      
+        });  
     }
     function createRoom(){
       //if (redirect === true) return <Redirect to="/"/>;
@@ -47,6 +47,8 @@ function MainApp() {
       setChatRoomCreatedStr(res.statusText)
     });
     getRoomtList();
+    console.log(roomList);
+    
   }
   let pathNameFix = (pathName) => {
     let getPathName = pathName.split('=');
@@ -89,7 +91,6 @@ function MainApp() {
             chatRoomCreatedMess={ chatRoomCreatedMess }
             chatRoomCreatedStr={ chatRoomCreatedStr }
             removeRoom={ removeRoom }
-            pathNameFix={ pathNameFix }
             />}
           />
           <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}

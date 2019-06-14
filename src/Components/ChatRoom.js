@@ -10,9 +10,6 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import { currentRoom$ } from './store';
 
 import { UserName, UserTyped } from './SideComponents.js';
-/* import { resolvePtr } from 'dns';
-import { functionTypeAnnotation } from '@babel/types';
-import { MainApp } from '../MainApp.js'; */
 
 import axios from 'axios';
 
@@ -37,10 +34,13 @@ export class ChatRoom extends PureComponent {
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
 
+        console.log(res);
+        
       // Update the userTypedArr
       this.setState({
-        userTyped: res.config.userTyped,
+        userTyped: res.userTyped,
       }); 
+
       for (const chatMessObj of res.messegnes) {
         this.messegnesAdd(chatMessObj);
       }
@@ -143,7 +143,7 @@ export class ChatRoom extends PureComponent {
     
   }
   render() {  
-    console.log(this.state.incommingMess);
+    console.log(this.fixServerRoomId());
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -164,6 +164,7 @@ export class ChatRoom extends PureComponent {
             <ScrollToBottom className="messagnesReceive">
               {(incommingMess.length != 0) ? 
                 incommingMess.map((obj, count) => {
+                  console.log(obj);
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">
