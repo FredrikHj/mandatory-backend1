@@ -17,10 +17,9 @@ let countUserID = 0;
 
 // Create a chatRoom
 let roomId  = () => { 
-    for (let index = 0; index < chatRooms.length; index++) {
-        
-        /* let idMax = chatRooms.chatRoom.data.roomConfig[index].id;//data[index];
-        countRoomID = idMax.chatRoom.roomConfig[index].id; */
+    for (let index = 0; index < chatRooms.roomSettinglength; index++) {
+        let idMax = chatRooms.roomSetting[index].id;
+        countRoomID = idMax.chatRoom.roomSetting[index].id;
 
         console.log('idMax');
         console.log(countRoomID);
@@ -33,64 +32,96 @@ let roomId  = () => {
 let chatRooms = require('./server/ChatRooms.json');
 
 app.post('/NewRoom', (req, res) => {
-    let chatRoomsObj = {
-        chatRoom: {
-            roomConfig: {
-                id: JSON.stringify(roomId()), // -1 = Give the room correct ID
-                roomName: req.body.roomName,
-            },
-            currentRoom: false,
-            userTyped: [],
-            messegnes: [],
-        }
-    }
-    chatRooms.push(chatRoomsObj);
-
+    let roomSettingObj = {
+        id: JSON.stringify(roomId()), // -1 = Give the room correct ID
+        roomName: req.body.roomName,     
+        currentRoom: false,    
+    };
+/*     let chatMessSettingObj = {
+        messegnes: [],
+        userTyped: []
+    }; */
+    chatRooms.roomSetting.push(roomSettingObj);
+    //chatRooms.chatMessSetting.push(chatMessSettingObj);
+    console.log('46');
+    
+    console.log(chatRooms);
+    
     // Save the chatRoomsObj into a json file named chatRoomsObj
     fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
         , null, 2
         ), function(err) {
             console.log(err);     
     });
+/*     fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatMessSetting.chatMessSettingObj //debugging
+        , null, 2
+        ), function(err) {
+            console.log(err);     
+    }); */
     res.status(201).end();
 });
 
 // Show a list with all rooms =====================================================================
 app.get('/RoomList', (req, res) => {  
-    res.status(200).send(chatRooms);
+    res.status(200).send(chatRooms.roomSetting);
 });
-// Get into a specific room, room is store in :id
+// Get the room id and set its obj key currentRoom to true
 app.get('/ChatRoom/:id', (req, res) => {
+    console.log('Set roomID');
+    
     let incommingRoomId = req.params.id;
-
-/*     let getCorrectRoomIndex = chatRooms.chatRoom.roomConfig.findIndex(room => parseInt(room.id) === parseInt(incommingRoomId));
-    console.log('obj index');
+    let getCorrectRoomIndex = chatRooms.roomSetting.findIndex(room => parseInt(room.id) === parseInt(incommingRoomId));
     
-    console.log(getCorrectRoomIndex); */
+    // Choose correct obj and set the key currentRoom to true
+    chatRooms.roomSetting[getCorrectRoomIndex].currentRoom = true;
+    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
+        , null, 2
+        ), function(err) {});      
+});
+// Get the room id and set its obj key currentRoom to false
+app.get('/ChatRoomReset/:id', (req, res) => {
+    console.log('Reset roomID');
+    let incommingRoomId = req.params.id;
+    let getCorrectRoomIndex = chatRooms.roomSetting.findIndex(room => parseInt(room.id) === parseInt(incommingRoomId));
     
+    // Choose correct obj and set the key currentRoom to true
+    chatRooms.roomSetting[getCorrectRoomIndex].currentRoom = false;
+    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
+        , null, 2
+        ), function(err) {});      
 });
 
 // Creates a connection between the server and my client and listen for mess
 const io = socket(server);
-
-io.on('connection', (socket) => {
-    // Get out current room
+fixCurrentRoom = () => {
+    let getRoomObjIndex = chatRooms.roomSetting.findIndex(room => room.currentRoom === true);
+    console.log('Roomindex');
     
-    let choosenRoom = '1'; //chatRooms.chatRoom.roomConfig.id;
+    let roomID = getRoomObjIndex
+    return roomID;
+    /*     fileSystem.readFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
+        , null, 2
+        ), function(err) {});  
+        */
+    }
+    io.on('connection', (socket) => {
+        let room = fixCurrentRoom();
+    // Get out current room
+
+
+    //let room = '1'; //chatRooms.chatRoom.roomConfig.id;
     
     //Send all messegnes on the server at once the client is open
-    socket.join(choosenRoom);
+    //socket.join(room);
     
     console.log('84');
-    console.log(chatRooms);
-    io.to(choosenRoom).emit('messegnes', chatRooms.chatRoom);
-    
-    
+    console.log(chatRooms.chatMessSetting);
+    //io.to(room).emit('messegnes', chatRooms);
 
     // Listen on newMessegnes and send it to all the client, create a  messId first
     let messId  = () => { 
-        for (let index = 0; index < chatRooms.chatRoom.messegnes.length; index++) {
-            let idMax = chatRooms.chatRoom.messegnes[index];
+        for (let index = 0; index < chatRooms.chatMessSetting.messegnes.length; index++) {
+            let idMax = chatRooms.chatMessSetting.messegnes[index];
             countMessID = idMax.id;
         }
         // Get the last id in my arr of movies
@@ -100,8 +131,8 @@ io.on('connection', (socket) => {
         return countMessID; 
     };
     let userTypedId  = () => { 
-        for (let index = 0; index < chatRooms.chatRoom.userTyped.length; index++) {
-            let idMax = chatRooms.chatRoom.userTyped[index];
+        for (let index = 0; index < chatRooms.chatMessSetting.userTyped.length; index++) {
+            let idMax = chatRooms.chatMessSetting.userTyped[index];
             countUserID = idMax.id;
         }
         // Get the last id in my arr of movies
@@ -155,18 +186,21 @@ io.on('connection', (socket) => {
         }
         
         // Push the new mes into its place
-        chatRooms.chatRoom.messegnes.push(chatMessObj);
+        chatRooms.chatMessSetting.messegnes.push(chatMessObj);
 
         // Fix the userTyped list
-        let userTypedObj = {id: JSON.stringify(userTypedId()), name: data.outUsr};
-        chatRooms.chatRoom.userTyped.push(userTypedObj);
+        let userTypedObj = {
+            id: JSON.stringify(userTypedId()),
+            name: data.outUsr
+        };
+        chatRooms.chatMessSetting.userTyped.push(userTypedObj);
  
         // Save the movies in an json file
         fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
             , null, 2
             ), function(err) {});       
             // Send the mess on server at once ther is any incommin mess from the client
-            //socket.join(choosenRoom).emit('newMessegnes', chatMessObj);
+            //socket.join(room).emit('newMessegnes', chatMessObj);
     });
     // Listen for who is typing a mess
     socket.on('typing', (usr) => {

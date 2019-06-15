@@ -18,10 +18,10 @@ export function UserTyped(props) {
     <section id="userList">
       <ul> <p id="userTyped">Dessa har skrivit</p>
        {(props.userTyped.length != 0) ?
-          props.userTyped.map((userTyped, count) => {
-            console.log(userTyped)
+          props.userTyped.map((obj, count) => {
+            console.log(obj)
             return(
-              <li key={ count }>{ userTyped.name }</li>
+              <li key={ count }>{ obj.name }</li>
             );
           }) : 'Listan laddas ...'
         }

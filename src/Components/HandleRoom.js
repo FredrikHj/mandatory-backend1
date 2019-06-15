@@ -24,7 +24,7 @@ export function HandleRoom(props) {
                 console.log(obj);
                 { return (
                   <>
-                    <Link className="button topMargin" to={ '/ChatRoom=' + obj.chatRoom.roomConfig.id + '_' + obj.chatRoom.roomConfig.roomName} key={ obj.chatRoom.roomConfig.id }>{ obj.chatRoom.roomConfig.roomName }</Link>
+                    <Link className="button topMargin" to={ '/ChatRoom=' + obj.id + '_' + obj.roomName} key={ obj.id }>{ obj.roomName }</Link>
                       <p className="removeRoomBtn" onClick={ props.removeRoom } id={ obj.id } data-index={ count } key={ count }>X</p>
                   </>
                 ); }

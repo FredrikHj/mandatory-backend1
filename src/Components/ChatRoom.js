@@ -34,22 +34,29 @@ export class ChatRoom extends PureComponent {
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
 
-        console.log(res);
+        console.log(res.chatMessSetting);
         
-      // Update the userTypedArr
-      this.setState({
-        userTyped: res.userTyped,
-      });
+      // Update mess and userTyped
+      this.messegnesAdd(res.chatMessSetting.messegnes);
+      this.userTypedAdd(res.chatMessSetting.userTyped);
 
-      for (const chatMessObj of res.messegnes) {
+
+      /* this.setState({
+        userTyped: res.chatMessSetting,
+      }); */
+
+     /*  for (const chatMessObj of res.chatMessSetting.messegnes) {
         this.messegnesAdd(chatMessObj);
-      }
+      } */
     });
+
     this.listen.on('newMessegnes', res => {
-        this.messegnesAdd(res);
-         this.setState({
-          userTyped: [ ...this.state.userTyped, {name: res.usr} ],
-        });
+      this.messegnesAdd(res.chatMessSetting.messegnes);
+      this.userTypedAdd(res.chatMessSetting.userTyped);
+
+   /*    this.setState({
+        userTyped: [ ...this.state.userTyped, {name: res.usr} ]
+      }); */
     });
     this.listen.on('connection', function(){});
 
@@ -65,22 +72,26 @@ export class ChatRoom extends PureComponent {
   componentDidUpdate() {
     // listen for another usertyping
     this.listen.on('typing', (usr) => {
-       this.setState({
+      this.setState({
         usrCurrentTyping: usr,
       });
     }); 
   }
-  messegnesAdd = (chatMessObj) => {      
+  messegnesAdd = (messObj) => {      
     this.setState({
-      incommingMess: [ ...this.state.incommingMess, chatMessObj] 
+      incommingMess: [ ...this.state.incommingMess, messObj ],
     });
-    
+  }
+  userTypedAdd = (userTypedObj) => {
+    this.setState({
+      userTyped: [ ...this.state.userTyped, userTypedObj] 
+    });
   }
   messagnesSend = () => {
     let messBody = {
       outUsr: this.state.usrName,
       outChatMess: this.state.messStr,
-    }
+    };
     this.listen.emit('newMessegnes', messBody, (data) => {
 
       this.messegnesAdd(data);
@@ -121,7 +132,14 @@ export class ChatRoom extends PureComponent {
       incommingMess: [],
     });
     window.localStorage.removeItem('currentRoom');
+    
+    // Sen present roomID for reset the currentRoom into false
+    axios.get('http://localhost:3001/ChatRoomReset/' + this.props.pathNameFix(this.props.location.pathname)).
+    then((res) => {});
+
   }
+
+
   removeMess = (e) => {
     let targetDelBntMessIndex = parseInt(e.target.dataset.index);
     console.log(targetDelBntMessIndex);
@@ -143,7 +161,7 @@ export class ChatRoom extends PureComponent {
     
   }
   render() {  
-    console.log(this.state.userTyped);
+    console.log(this.state.incommingMess);
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -164,7 +182,7 @@ export class ChatRoom extends PureComponent {
             <ScrollToBottom className="messagnesReceive">
               {(incommingMess.length != 0) ? 
                 incommingMess.map((obj, count) => {
-                  console.log(obj);
+                  console.log(obj)
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">

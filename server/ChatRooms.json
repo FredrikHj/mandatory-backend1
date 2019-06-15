@@ -1,13 +1,18 @@
-[
-  {
-    "chatRoom": {
-      "roomConfig": {
-        "id": "1",
-        "roomName": "trhth"
-      },
-      "currentRoom": false,
-      "userTyped": [],
-      "messegnes": []
+{
+  "roomSetting": [
+    {
+      "id": "1",
+      "roomName": "uyjk",
+      "currentRoom": true
+    },
+    {
+      "id": "2",
+      "roomName": "giuk",
+      "currentRoom": false
     }
+  ],
+  "chatMessSetting": {
+    "messegnes": [],
+    "userTyped": []
   }
-]
+}
