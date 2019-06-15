@@ -39,7 +39,7 @@ export class ChatRoom extends PureComponent {
       // Update the userTypedArr
       this.setState({
         userTyped: res.userTyped,
-      }); 
+      });
 
       for (const chatMessObj of res.messegnes) {
         this.messegnesAdd(chatMessObj);
@@ -143,7 +143,7 @@ export class ChatRoom extends PureComponent {
     
   }
   render() {  
-    console.log(this.fixServerRoomId());
+    console.log(this.state.userTyped);
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,

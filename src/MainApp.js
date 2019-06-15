@@ -30,6 +30,8 @@ function MainApp() {
     function getRoomtList() {
       axios.get('http://localhost:3001/RoomList').
         then((res) => {
+          console.log(res.data);
+          
           setRoomList(res.data);
         });
         currentRoom$.subscribe((currentRoom) => { 

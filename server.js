@@ -18,8 +18,12 @@ let countUserID = 0;
 // Create a chatRoom
 let roomId  = () => { 
     for (let index = 0; index < chatRooms.length; index++) {
-        let idMax = chatRooms[index];
-        countRoomID = idMax.id;
+        
+        /* let idMax = chatRooms.chatRoom.data.roomConfig[index].id;//data[index];
+        countRoomID = idMax.chatRoom.roomConfig[index].id; */
+
+        console.log('idMax');
+        console.log(countRoomID);
     }
     // Get the last id in my arr of movies
     countRoomID++;    
@@ -31,12 +35,11 @@ let chatRooms = require('./server/ChatRooms.json');
 app.post('/NewRoom', (req, res) => {
     let chatRoomsObj = {
         chatRoom: {
-            roomConfig: [
-                {
-                    id: JSON.stringify(roomId()), // -1 = Give the room correct ID
-                    roomName: req.body.roomName,
-                }
-            ],  
+            roomConfig: {
+                id: JSON.stringify(roomId()), // -1 = Give the room correct ID
+                roomName: req.body.roomName,
+            },
+            currentRoom: false,
             userTyped: [],
             messegnes: [],
         }
@@ -44,7 +47,7 @@ app.post('/NewRoom', (req, res) => {
     chatRooms.push(chatRoomsObj);
 
     // Save the chatRoomsObj into a json file named chatRoomsObj
-    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRoomsObj //debugging
+    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
         , null, 2
         ), function(err) {
             console.log(err);     
@@ -53,15 +56,17 @@ app.post('/NewRoom', (req, res) => {
 });
 
 // Show a list with all rooms =====================================================================
-app.get('/RoomList', (req, res) => {
-    res.status(200).send(chatRooms.chatRoom.roomConfig);
+app.get('/RoomList', (req, res) => {  
+    res.status(200).send(chatRooms);
 });
 // Get into a specific room, room is store in :id
 app.get('/ChatRoom/:id', (req, res) => {
     let incommingRoomId = req.params.id;
 
-    let getCorrectRoomIndex = chatRooms.chatRoom.roomConfig.findIndex(room => parseInt(room.id) === parseInt(incommingRoomId));
-    console.log(getCorrectRoomIndex);
+/*     let getCorrectRoomIndex = chatRooms.chatRoom.roomConfig.findIndex(room => parseInt(room.id) === parseInt(incommingRoomId));
+    console.log('obj index');
+    
+    console.log(getCorrectRoomIndex); */
     
 });
 
@@ -70,15 +75,17 @@ const io = socket(server);
 
 io.on('connection', (socket) => {
     // Get out current room
-
+    
     let choosenRoom = '1'; //chatRooms.chatRoom.roomConfig.id;
-
+    
     //Send all messegnes on the server at once the client is open
     socket.join(choosenRoom);
-
+    
+    console.log('84');
+    console.log(chatRooms);
     io.to(choosenRoom).emit('messegnes', chatRooms.chatRoom);
-
-
+    
+    
 
     // Listen on newMessegnes and send it to all the client, create a  messId first
     let messId  = () => { 
@@ -90,8 +97,7 @@ io.on('connection', (socket) => {
         countMessID++;    
         console.log('91');
         console.log(countMessID);
-
-        return countMessID;
+        return countMessID; 
     };
     let userTypedId  = () => { 
         for (let index = 0; index < chatRooms.chatRoom.userTyped.length; index++) {
@@ -100,9 +106,6 @@ io.on('connection', (socket) => {
         }
         // Get the last id in my arr of movies
         countUserID++;
-        console.log('104');
-        console.log(countUserID);
-        
         return countUserID;
     }
     socket.on('newMessegnes', (data) => {
@@ -150,14 +153,14 @@ io.on('connection', (socket) => {
             usr: data.outUsr,
             chatMess: data.outChatMess
         }
-
-        console.log('121');
-        console.log(chatRooms);
-        // Push the new mes and the user into the file
+        
+        // Push the new mes into its place
         chatRooms.chatRoom.messegnes.push(chatMessObj);
+
+        // Fix the userTyped list
         let userTypedObj = {id: JSON.stringify(userTypedId()), name: data.outUsr};
         chatRooms.chatRoom.userTyped.push(userTypedObj);
-
+ 
         // Save the movies in an json file
         fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
             , null, 2

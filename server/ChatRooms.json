@@ -1,34 +1,13 @@
-{
-  "chatRoom": {
-    "roomConfig": [
-      {
+[
+  {
+    "chatRoom": {
+      "roomConfig": {
         "id": "1",
-        "roomName": "TG4EWRT"
-      }
-    ],
-    "userTyped": [
-      {
-        "id": "1",
-        "name": "dhdhf"
+        "roomName": "trhth"
       },
-      {
-        "id": "2",
-        "name": "dhdhf"
-      }
-    ],
-    "messegnes": [
-      {
-        "id": "1",
-        "timeStamp": "15 Juni 2019 | 0:58",
-        "usr": "dhdhf",
-        "chatMess": "htth"
-      },
-      {
-        "id": "2",
-        "timeStamp": "15 Juni 2019 | 0:58",
-        "usr": "dhdhf",
-        "chatMess": "htth"
-      }
-    ]
+      "currentRoom": false,
+      "userTyped": [],
+      "messegnes": []
+    }
   }
-}
+]
