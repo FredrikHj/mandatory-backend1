@@ -10,9 +10,11 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import { currentRoom$ } from './store';
 
 import { UserName, UserTyped } from './SideComponents.js';
+/* import { resolvePtr } from 'dns';
+import { functionTypeAnnotation } from '@babel/types';
+import { MainApp } from '../MainApp.js'; */
 
 import axios from 'axios';
-import { Socket } from 'net';
 
 export class ChatRoom extends PureComponent {
   constructor(props) {
@@ -27,10 +29,6 @@ export class ChatRoom extends PureComponent {
       usrCurrentTyping: '',
     }
   }
-  fixRoomId = () => {
-    let getRoomId = this.props.location.pathname.split('=')[1].split('_')[0]; 
-    return getRoomId;
-  }
   componentDidMount() {  
     // Send my room id and name
     axios.get('http://localhost:3001/ChatRoom/' + this.props.pathNameFix(this.props.location.pathname)).
@@ -38,33 +36,25 @@ export class ChatRoom extends PureComponent {
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
+      console.log(res);
       
-      console.log(res.chatRoomSetting[parseInt(this.fixRoomId()) - 1]);
-      
-      // Update mess and userTyped
-      let intoRoom = res.chatRoomSetting[parseInt(this.fixRoomId()) - 1];
-      console.log(intoRoom);
-
-      for (const chatMessObj of intoRoom.messegnes) {
-        console.log(chatMessObj);
-        
+      // Update the userTypedArr
+      this.setState({
+        userTyped: res.config.userTyped,
+      }); 
+      for (const chatMessObj of res.messegnes) {
         this.messegnesAdd(chatMessObj);
-      }
-      for (const chatUserTyped of intoRoom.userTyped) {
-        this.userTypedAdd(chatUserTyped);
       }
     });
     this.listen.on('newMessegnes', res => {
       console.log(res);
-
-      this.messegnesAdd(res.messegnes.pop());
-      this.userTypedAdd(res.userTyped.pop());
+        this.messegnesAdd(res);
+         this.setState({
+          userTyped: [ ...this.state.userTyped, {name: res.usr} ],
+        });
     });
     this.listen.on('connection', function(){});
-    
-    // Tell server which room to join
-    console.log(this.fixRoomId());
-    this.listen.emit('join', this.fixRoomId());
+
 
     let subscription = currentRoom$.subscribe((currentRoom) => { 
       if (currentRoom) {
@@ -77,38 +67,26 @@ export class ChatRoom extends PureComponent {
   componentDidUpdate() {
     // listen for another usertyping
     this.listen.on('typing', (usr) => {
-      this.setState({
+       this.setState({
         usrCurrentTyping: usr,
       });
-    });
-
+    }); 
   }
-  messegnesAdd = (messObj) => {   
-    console.log(messObj);
-     
+  messegnesAdd = (chatMessObj) => {      
     this.setState({
-      incommingMess: [ ...this.state.incommingMess, messObj ],
+      incommingMess: [ ...this.state.incommingMess, chatMessObj] 
     });
-  }
-  userTypedAdd = (userTypedObj) => {
-    console.log(userTypedObj);
     
-    this.setState({
-      userTyped: [ ...this.state.userTyped, userTypedObj] 
-    });
   }
   messagnesSend = () => {
     let messBody = {
       outUsr: this.state.usrName,
       outChatMess: this.state.messStr,
-    };
-    console.log(messBody);
-    
+    }
     this.listen.emit('newMessegnes', messBody, (data) => {
-      console.log(data);
-      
+
       this.messegnesAdd(data);
-    });
+    });    
   }
   changeUsrName = (e) => {       
     this.setState({
@@ -161,10 +139,13 @@ export class ChatRoom extends PureComponent {
      incommingMess: newMessList,
     });
   } 
-
+  fixServerRoomId = () => {
+    let getRoomId = this.props.location.pathname.split('=')[1].split('_')[0];
+    return getRoomId;
+    
+  }
   render() {  
     console.log(this.state.incommingMess);
-    console.log(this.state.userTyped);
     let incommingMess = this.state.incommingMess;
     let options = {
       convertShortnames: true,
@@ -185,12 +166,11 @@ export class ChatRoom extends PureComponent {
             <ScrollToBottom className="messagnesReceive">
               {(incommingMess.length != 0) ? 
                 incommingMess.map((obj, count) => {
-                  console.log(obj)
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">
                         <p className="messCountedId">{ obj.id + ',)' }</p><p>{ obj.usr }</p> <p>{ obj.timeStamp }</p> 
-                        <p className="removeMessBtn" onClick={ this.removeMess } id={ obj.id } data-room={ this.fixRoomId() } data-index={ count }>X</p>
+                        <p className="removeMessBtn" onClick={ this.removeMess } id={ obj.id } data-room={ this.fixServerRoomId() } data-index={ count }>X</p>
                       </header>
                       <div className="messContent" >
                         <Linkify>

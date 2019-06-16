@@ -30,28 +30,24 @@ function MainApp() {
     function getRoomtList() {
       axios.get('http://localhost:3001/RoomList').
         then((res) => {
-          console.log(res.data);
-          
           setRoomList(res.data);
         });
         currentRoom$.subscribe((currentRoom) => { 
           if (currentRoom) {
             setShowChatRoom(' - ' + currentRoom);
           }
-        });  
+        });      
     }
-    function createRoom(){ 
-      axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
-        then((res) => {
-        console.log(res.data);
-        setRoomList(res.data);
-        setChatRoomCreatedMess(true);
-        setChatRoomCreatedStr(res.statusText)
-      });
-      getRoomtList();
-      console.log(roomList);
-      
-    }
+    function createRoom(){
+      //if (redirect === true) return <Redirect to="/"/>;
+    
+    axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
+      then((res) => {
+      setChatRoomCreatedMess(true);
+      setChatRoomCreatedStr(res.statusText)
+    });
+    getRoomtList();
+  }
   let pathNameFix = (pathName) => {
     let getPathName = pathName.split('=');
     let getFixedPathName = getPathName[1].split('_')[0];
@@ -85,6 +81,7 @@ function MainApp() {
       </header>
       <main id="mainContainer">
         <Router>
+        
           <Route exact path="/" render={(props) => <HandleRoom {...props}
             setRoomName={ setRoomName }
             createRoom= { createRoom }
@@ -92,6 +89,7 @@ function MainApp() {
             chatRoomCreatedMess={ chatRoomCreatedMess }
             chatRoomCreatedStr={ chatRoomCreatedStr }
             removeRoom={ removeRoom }
+            pathNameFix={ pathNameFix }
             />}
           />
           <Route exact path="/ChatRoom=:id" render={(props) => <ChatRoom {...props}

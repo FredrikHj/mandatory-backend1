@@ -2,17 +2,326 @@
   "roomSetting": [
     {
       "id": "1",
-      "roomName": "uyjk",
-      "currentRoom": true
-    },
-    {
-      "id": "2",
-      "roomName": "giuk",
-      "currentRoom": false
+      "roomName": "ddvcs<v"
     }
   ],
-  "chatMessSetting": {
-    "messegnes": [],
-    "userTyped": []
-  }
+  "chatRoomSetting": [
+    {
+      "id": "1",
+      "messegnes": [
+        {
+          "id": "1",
+          "timeStamp": "16 Juni 2019 | 23:1",
+          "usr": "AGREGAREWG",
+          "chatMess": "eQ2W"
+        },
+        {
+          "id": "2",
+          "timeStamp": "16 Juni 2019 | 23:5",
+          "usr": "ece",
+          "chatMess": "eCVECVSED"
+        },
+        {
+          "id": "3",
+          "timeStamp": "16 Juni 2019 | 23:11",
+          "usr": "efwf",
+          "chatMess": "ef"
+        },
+        {
+          "id": "4",
+          "timeStamp": "16 Juni 2019 | 23:12",
+          "usr": "csdsaC",
+          "chatMess": "sazcsadc"
+        },
+        {
+          "id": "5",
+          "timeStamp": "16 Juni 2019 | 23:15",
+          "usr": "jyt",
+          "chatMess": "jyt"
+        },
+        {
+          "id": "6",
+          "timeStamp": "16 Juni 2019 | 23:15",
+          "usr": "jyt",
+          "chatMess": "jyt"
+        },
+        {
+          "id": "7",
+          "timeStamp": "16 Juni 2019 | 23:23",
+          "usr": "grfre",
+          "chatMess": "fgsdrefg"
+        },
+        {
+          "id": "8",
+          "timeStamp": "16 Juni 2019 | 23:32",
+          "usr": "hmgm",
+          "chatMess": "yjhm"
+        },
+        {
+          "id": "9",
+          "timeStamp": "16 Juni 2019 | 23:35",
+          "usr": "greg",
+          "chatMess": "greg"
+        },
+        {
+          "id": "10",
+          "timeStamp": "16 Juni 2019 | 23:51",
+          "usr": "Fredrik",
+          "chatMess": "Fredrik"
+        },
+        {
+          "id": "11",
+          "timeStamp": "16 Juni 2019 | 23:54",
+          "usr": "chatRoomSett",
+          "chatMess": "chatRoomSetting"
+        },
+        {
+          "id": "12",
+          "timeStamp": "16 Juni 2019 | 23:57",
+          "usr": "d<d",
+          "chatMess": "gzsdg"
+        },
+        {
+          "id": "13",
+          "timeStamp": "16 Juni 2019 | 23:58",
+          "usr": "dv<",
+          "chatMess": "vfdc<"
+        },
+        {
+          "id": "14",
+          "timeStamp": "16 Juni 2019 | 23:59",
+          "usr": "czsx",
+          "chatMess": "uhu"
+        },
+        {
+          "id": "15",
+          "timeStamp": "17 Juni 2019 | 0:0",
+          "usr": "f",
+          "chatMess": "f"
+        },
+        {
+          "id": "16",
+          "timeStamp": "17 Juni 2019 | 0:0",
+          "usr": "cs",
+          "chatMess": "cs"
+        },
+        {
+          "id": "17",
+          "timeStamp": "17 Juni 2019 | 0:1",
+          "usr": "fv",
+          "chatMess": "rfv"
+        },
+        {
+          "id": "18",
+          "timeStamp": "17 Juni 2019 | 0:4",
+          "usr": "rge",
+          "chatMess": "tgr"
+        },
+        {
+          "id": "19",
+          "timeStamp": "17 Juni 2019 | 0:5",
+          "usr": "efwsf",
+          "chatMess": "erf"
+        },
+        {
+          "id": "20",
+          "timeStamp": "17 Juni 2019 | 0:5",
+          "usr": "thr",
+          "chatMess": "rtyh"
+        },
+        {
+          "id": "21",
+          "timeStamp": "17 Juni 2019 | 0:6",
+          "usr": "thr",
+          "chatMess": "rtyh"
+        },
+        {
+          "id": "22",
+          "timeStamp": "17 Juni 2019 | 0:7",
+          "usr": "Frer",
+          "chatMess": "Frer"
+        },
+        {
+          "id": "23",
+          "timeStamp": "17 Juni 2019 | 0:10",
+          "usr": "Frerf",
+          "chatMess": "Frer"
+        },
+        {
+          "id": "24",
+          "timeStamp": "17 Juni 2019 | 0:14",
+          "usr": "zbf",
+          "chatMess": "zfdb"
+        },
+        {
+          "id": "25",
+          "timeStamp": "17 Juni 2019 | 0:18",
+          "usr": "wd",
+          "chatMess": "dwq"
+        },
+        {
+          "id": "26",
+          "timeStamp": "17 Juni 2019 | 0:24",
+          "usr": "D",
+          "chatMess": "dwWAD"
+        },
+        {
+          "id": "27",
+          "timeStamp": "17 Juni 2019 | 0:29",
+          "usr": "fdvb",
+          "chatMess": "fv"
+        },
+        {
+          "id": "28",
+          "timeStamp": "17 Juni 2019 | 0:33",
+          "usr": "f7i",
+          "chatMess": "7fi"
+        },
+        {
+          "id": "29",
+          "timeStamp": "17 Juni 2019 | 0:35",
+          "usr": "rfbd",
+          "chatMess": "tgfb"
+        }
+      ],
+      "userTyped": [
+        {
+          "id": "1",
+          "name": "AGREGAREWG"
+        },
+        {
+          "id": "2",
+          "name": "ece"
+        },
+        {
+          "id": "3",
+          "name": "efwf"
+        },
+        {
+          "id": "4",
+          "name": "csdsaC"
+        },
+        {
+          "id": "5",
+          "name": "jyt"
+        },
+        {
+          "id": "6",
+          "name": "jyt"
+        },
+        {
+          "id": "7",
+          "name": "grfre"
+        },
+        {
+          "id": "8",
+          "name": "hmgm"
+        },
+        {
+          "id": "9",
+          "name": "greg"
+        },
+        {
+          "id": "10",
+          "name": "Fredrik"
+        },
+        {
+          "id": "11",
+          "name": "chatRoomSett"
+        },
+        {
+          "id": "12",
+          "name": "d<d"
+        },
+        {
+          "id": "13",
+          "name": "dv<"
+        },
+        {
+          "id": "14",
+          "name": "czsx"
+        },
+        {
+          "id": "15",
+          "name": "f"
+        },
+        {
+          "id": "16",
+          "name": "cs"
+        },
+        {
+          "id": "17",
+          "name": "fv"
+        },
+        {
+          "id": "18",
+          "name": "rge"
+        },
+        {
+          "id": "19",
+          "name": "efwsf"
+        },
+        {
+          "id": "20",
+          "name": "thr"
+        },
+        {
+          "id": "21",
+          "name": "thr"
+        },
+        {
+          "id": "22",
+          "name": "Frer"
+        },
+        {
+          "id": "23",
+          "name": "Frerf"
+        },
+        {
+          "id": "24",
+          "name": "zbf"
+        },
+        {
+          "id": "25",
+          "name": "wd"
+        },
+        {
+          "id": "26",
+          "name": "D"
+        },
+        {
+          "id": "27",
+          "name": "fdvb"
+        },
+        {
+          "id": "28",
+          "name": "f7i"
+        },
+        {
+          "id": "29",
+          "name": "r"
+        },
+        {
+          "id": "30",
+          "name": "rfbd"
+        },
+        {
+          "id": "31",
+          "name": "rfbd"
+        },
+        {
+          "id": "32",
+          "name": "rfbd"
+        },
+        {
+          "id": "33",
+          "name": "rfbd"
+        },
+        {
+          "id": "34",
+          "name": "rfbd"
+        }
+      ]
+    }
+  ]
 }

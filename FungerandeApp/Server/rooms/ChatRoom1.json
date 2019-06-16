@@ -1,0 +1,47 @@
+{
+  "config": {
+    "id": "1",
+    "name": "t54r",
+    "userTyped": [
+      {
+        "name": "jytytj"
+      },
+      {
+        "name": "sthrh"
+      },
+      {
+        "name": "sthrh"
+      },
+      {
+        "name": "sthrh"
+      }
+    ],
+    "content-type": ""
+  },
+  "messegnes": [
+    {
+      "id": "1",
+      "timeStamp": "16 Juni 2019 | 21:35",
+      "usr": "jytytj",
+      "chatMess": "jyutj"
+    },
+    {
+      "id": "2",
+      "timeStamp": "16 Juni 2019 | 21:37",
+      "usr": "sthrh",
+      "chatMess": "htrh"
+    },
+    {
+      "id": "3",
+      "timeStamp": "16 Juni 2019 | 21:38",
+      "usr": "sthrh",
+      "chatMess": "htrh"
+    },
+    {
+      "id": "4",
+      "timeStamp": "16 Juni 2019 | 21:39",
+      "usr": "sthrh",
+      "chatMess": "htrh"
+    }
+  ]
+}

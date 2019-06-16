@@ -1,0 +1,323 @@
+/*Generall ========================================*/
+body {
+  position: absolute;
+  top: calc(50% - 300px);
+  left: calc(50% - 250px);
+  width: 500px;
+  height: 100%;
+  background-color: orange;
+}
+#reactRoot{
+  background-color: black;
+  border-radius: 30px;
+}
+.button {
+  display: inline-block;
+  padding: 5px 19px;
+  font-size: 17px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+/* Main app =======================================*/
+#header{
+  padding-top: 5px;
+  height: 50px;
+  border-bottom: 3px solid orange;
+}
+#mainContainer{
+  justify-content: center;
+  color: white;
+  height: 450px;
+}
+
+/* HandleRoom */
+#handleRoomContainer{
+  position: absolute;
+  left: calc(50% - 200px);
+  top: calc(28%);
+  width: 400px;
+}
+/* Create room */
+#createRoomContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 370px;
+}
+#createRoomHl{
+  margin-top: 20px;
+}
+.createRoomBtn{
+  position: relative;
+  width: 40px;
+  height: 40px;
+  top: 6px;
+  left: 10px;
+}
+#createRoomSymbol{
+  font-size: 20px;
+  color: black;
+  margin-top: 10px;
+  margin-left: -3px;
+}
+/* Choose room */
+#chooseRoomContainer{
+  
+}
+#chooseRoomHl{
+  text-align: center;
+}
+#gotToRoom{
+     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.topMargin{
+  margin-top: 15px;
+}
+.removeRoomBtn{
+  position: relative;
+  left: -20px;
+  top: 2px;
+  color: red;
+  background: none;
+  border: none;
+}
+/* ChatRoom =========================================*/
+#chatRoomHedline{
+  position: relative;
+  top: 10px;
+  text-align: center;
+}
+fieldset{
+  border: none;
+}
+.messagnesReceive{
+  height: 198px;
+  overflow-x: hidden;
+}
+.messContainer{
+  padding-left: 3px;
+  padding-bottom: 3px;
+  margin-top: 5px;
+}
+.messHeader{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  width: 98%;
+  border-bottom: 2px solid black;
+  height: 34px;
+}
+.messCountedId{
+  width: 10px;
+}
+.timeDate{
+  margin-left: 150px;
+}
+.removeMessBtn{
+  position: relative;
+  left: -20px;
+  top: 2px;
+  color: red;
+  background: none;
+  border: none;
+}
+.messContent{
+  margin-top: 6px;
+  width: 100%;
+  word-break: break-all;
+}
+#usrTypingStatus{
+  margin-top: 6px;
+  height: 23px;
+}
+.middleLine{
+  margin-top: -2px;
+  width: 100%;
+  height: 3px;
+  background-color: grey;
+}
+#messagneSend{
+  position: absolute;
+  left: 0px;
+  bottom: 10px;
+}
+.inputReq{
+  font-weight: bold;
+  color: red
+}
+#chatMessegnes{
+  width: 250px;
+  height: 50px;
+  resize: none;
+}
+#finishMess{
+  position: relative;
+  top: -15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+#sendBtn{
+  height: 20px;
+}
+#changeRoomContainer{
+  position: absolute;
+  left: 331px;
+  top: 26px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 200px;
+}
+#changeRoomHeadline{
+  text-align: center;
+  color: white;
+  margin-bottom: -10px;
+}
+
+/* UserContainer  =========================================*/
+#userName{
+  width: 95px;
+  position: relative;
+}
+
+/* UserTyped  =========================================*/
+#userList{
+  position: absolute;
+    left: 300px;
+    color: white;
+    height: 154px;
+    overflow-y: auto;
+}
+
+
+
+
+
+#headLine{
+  margin-top: 5px;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+.inputReq{
+  font-weight: bold;
+  color: red
+}
+#incorrectUsername{
+  position: absolute;
+  top: 260px;
+  left: 134px;
+  display: none;
+  color: white;
+  width: 250px;
+  height: 60px;
+  background-color: black;
+}
+/* ============== View 1 ============== */
+#view1{
+  display: block;
+}
+#labelContainer{
+  position: relative;
+  top: 152px;
+  width: 100%;
+  text-align: center;
+}
+#userContainer{
+  position: absolute;
+  left: 332px;
+  top: 1px;
+  color: white;
+}
+
+#usrStrView1{
+  font-size: 18px;
+}
+#closeBtn{
+  position: relative;
+  left: 424px;
+  top: -67px;
+  background: none;
+  color: white;
+  font-weight: bold;
+  border: none;
+  display: none;
+}
+/* ============== View 2 ============== */
+#mainContentContainer{
+  position: relative;
+  top: 17px;
+  left: 44px;
+  width: 60%;
+  height: 415px;
+  border-radius: 30px;
+  background-color: white;
+  color: black;
+}
+aside{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+/* ChatRoom =============================================*/
+#chatWindow{
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: black;
+  
+  margin-top: 0px;
+}
+
+
+#userList li{
+  list-style-type: none;
+}
+#userTyped{
+  width: 120px;
+  margin-left: -24px;
+  margin-bottom: 1px;
+}
+#yourUsrNameView2{
+  position: absolute;
+  top: 14px;
+  right: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.timeIdContainer{
+  width: 300px;
+}
+#yourInputedMess{
+  word-break: break-all;
+  width: 100%;
+}
+
+
