@@ -6,13 +6,11 @@ import Linkify from 'react-linkify';
 import Emojify from "react-emojione";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import { currentRoom$ } from './store';
-
 import { UserName, UserTyped } from './SideComponents.js';
-
 import axios from 'axios';
-import { Socket } from 'net';
 
 export class ChatRoom extends PureComponent {
   constructor(props) {
@@ -33,21 +31,14 @@ export class ChatRoom extends PureComponent {
   }
   componentDidMount() {  
     // Send my room id and name
-    axios.get('http://localhost:3001/ChatRoom/' + this.props.pathNameFix(this.props.location.pathname)).
-    then((res) => {});
+    axios.get('http://localhost:3001/ChatRoom/' + this.props.pathNameFix(this.props.location.pathname)).then((res) => {});
     // Listen on respponse from the chatserver
     this.listen = io.connect(this.state.serverUrl);
     this.listen.on('messegnes', res => {
       
-      console.log(res.chatRoomSetting[parseInt(this.fixRoomId()) - 1]);
-      
       // Update mess and userTyped
       let intoRoom = res.chatRoomSetting[parseInt(this.fixRoomId()) - 1];
-      console.log(intoRoom);
-
       for (const chatMessObj of intoRoom.messegnes) {
-        console.log(chatMessObj);
-        
         this.messegnesAdd(chatMessObj);
       }
       for (const chatUserTyped of intoRoom.userTyped) {
@@ -57,10 +48,13 @@ export class ChatRoom extends PureComponent {
     this.listen.on('connection', function(){});
     
     // Tell server which room to join
-    console.log(this.fixRoomId());
+    this.listen.on('newMessegnes', res => {
+      this.messegnesAdd(res.messegnes.pop());
+      this.userTypedAdd(res.userTyped.pop());
+    });
     this.listen.emit('join', this.fixRoomId());
 
-    let subscription = currentRoom$.subscribe((currentRoom) => { 
+    currentRoom$.subscribe((currentRoom) => { 
       if (currentRoom) {
         this.setState({
           activeChatroom: currentRoom,
@@ -78,15 +72,11 @@ export class ChatRoom extends PureComponent {
 
   }
   messegnesAdd = (messObj) => {   
-    console.log(messObj);
-     
     this.setState({
       incommingMess: [ ...this.state.incommingMess, messObj ],
     });
   }
   userTypedAdd = (userTypedObj) => {
-    console.log(userTypedObj);
-    
     this.setState({
       userTyped: [ ...this.state.userTyped, userTypedObj] 
     });
@@ -96,19 +86,9 @@ export class ChatRoom extends PureComponent {
       outUsr: this.state.usrName,
       outChatMess: this.state.messStr,
     };
-    console.log(messBody);
-    
     this.listen.emit('newMessegnes', messBody, (data) => {
-      console.log(data);
-      
-      //this.messegnesAdd(data);
     });
-    this.listen.on('newMessegnes', res => {
-      console.log(res);
 
-      this.messegnesAdd(res.messegnes.pop());
-      this.userTypedAdd(res.userTyped.pop());
-    });
   }
   changeUsrName = (e) => {       
     this.setState({
@@ -136,7 +116,6 @@ export class ChatRoom extends PureComponent {
       let startValue = 0;
       let getMessLength = this.state.messStr.length;
       let getTotLeft = startValue+getMessLength;
-      let getCounter = document.querySelector('#totCounter');
       return getTotLeft;
     }
   }
@@ -148,44 +127,25 @@ export class ChatRoom extends PureComponent {
   }
   removeMess = (e) => {
     let targetDelBntMessIndex = parseInt(e.target.dataset.index);
-    console.log(targetDelBntMessIndex);
-    
     let targetDelBtInRoomId = e.target.dataset.room;
     let targetDelBntMessId = e.target.id;
 
     axios.delete(this.props.apiUrl + '/RemoveMess/' +  targetDelBtInRoomId + '=' + targetDelBntMessId
-    ).
-    then((res) => {});
+    ).then((res) => {});
     let newMessList = [...this.state.incommingMess.slice(0, targetDelBntMessIndex), ...this.state.incommingMess.slice(targetDelBntMessIndex + 1)];
     this.setState({
      incommingMess: newMessList,
     });
   } 
-
   render() {  
-    console.log(this.state.incommingMess);
-    console.log(this.state.userTyped);
-    let incommingMess = this.state.incommingMess;
-    let options = {
-      convertShortnames: true,
-      convertUnicode: true,
-      convertAscii: true,
-      style: {
-        backgroundImage: 'url("/path/to/your/emojione.sprites.png")',
-        height: 32,
-        margin: 4,
-      },
-      // this click handler will be set on every emoji
-      onClick: event => alert(event.target.title)
-    };    
+    let incommingMess = this.state.incommingMess;  
     return (
       <section id="mainContentContainer">
         <fieldset>
           <legend id="chatRoomHedline">Meddelanden</legend>            
             <ScrollToBottom className="messagnesReceive">
-              {(incommingMess.length != 0) ? 
+              {(incommingMess.length !== 0) ? 
                 incommingMess.map((obj, count) => {
-                  console.log(obj)
                   return (
                     <section className="messContainer" key={ obj.id }>
                       <header className="messHeader">

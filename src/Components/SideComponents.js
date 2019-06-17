@@ -1,7 +1,5 @@
 // SideComponents =====================================================================================================================
-import React, { useState, setState } from 'react';
-// React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import React from 'react';
 
 export function UserName(props) {
   return (
@@ -12,14 +10,12 @@ export function UserName(props) {
   );
 }
 export function UserTyped(props) {
-  console.log(props);
   
   return (
     <section id="userList">
       <ul> <p id="userTyped">Dessa har skrivit</p>
-       {(props.userTyped.length != 0) ?
+       {(props.userTyped.length !== 0) ?
           props.userTyped.map((obj, count) => {
-            console.log(obj)
             return(
               <li key={ count }>{ obj.name }</li>
             );

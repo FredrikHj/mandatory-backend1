@@ -8,7 +8,7 @@ export function Header(props) {
   const [showChatRoom, setShowChatRoom ] = useState('');
 
   useEffect(() => {
-    let subscription = currentRoom$.subscribe((currentRoom) => { 
+   currentRoom$.subscribe((currentRoom) => { 
       if (currentRoom) {
         setShowChatRoom(' - ' + currentRoom);
       }

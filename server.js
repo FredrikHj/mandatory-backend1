@@ -139,6 +139,9 @@ io.on('connection', (socket) => {
                 usr: data.outUsr,
                 chatMess: data.outChatMess
             }
+            /* console.log('142');
+            console.log(chatMessObj); */
+            
             // Push the new mes into its place
             chatRooms.chatRoomSetting[roomIndex].messegnes.push(chatMessObj);
             
@@ -150,10 +153,10 @@ io.on('connection', (socket) => {
             chatRooms.chatRoomSetting[roomIndex].userTyped.push(userTypedObj);
     
             // Save the movies in an json file
-            fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
-                , null, 2
+            fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging               , null, 2
                 ), function(err) {});       
-                            
+               /*  console.log('159');
+                console.log(chatRooms.chatRoomSetting[roomIndex]); */
             // Send the mess on server at once ther is any incommin mess from the client
             socket.
             //to(roomNrStr).
@@ -215,8 +218,7 @@ app.delete('/RemoveMess/:id', (req, res) => {
         chatRooms.chatRoomSetting[incommingRoomIndexNr].messegnes.splice(indexToRemove, 1);
     }
     // Save the new messlist back to its json file
-    fileSystem.writeFile('./server/chatRooms.json', JSON.stringify(chatRooms //debugging
-        , null, 2
+    fileSystem.writeFile('./server/chatRooms.json', JSON.stringify(chatRooms //debugging        , null, 2
         ), function(err) {
             if (err) {
                 console.log(err);

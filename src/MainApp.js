@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { ChatRoom } from './Components/ChatRoom.js';
 import { currentRoom$, updateCurrentRoom } from './Components/store.js';
@@ -13,9 +13,7 @@ import { Header } from './Components/Header.js';
 
 // MainApp =======================================================================================================================
 function MainApp() {
-  const [redirect, setRedirect ] = useState(true);
   const [apiUrl, setApiUrl ] = useState('');
-  const [userName, setUserName ] = useState('');
   const [roomNameStr, updateRoomNameStr ] = useState('');
   const [roomList, setRoomList ] = useState([]);
   const [showChatRoom, setShowChatRoom ] = useState('');
@@ -28,10 +26,7 @@ function MainApp() {
     getRoomtList();
     }, []);
     function getRoomtList() {
-      axios.get('http://localhost:3001/RoomList').
-        then((res) => {
-          console.log(res.data);
-          
+      axios.get('http://localhost:3001/RoomList').then((res) => {         
           setRoomList(res.data);
         });
         currentRoom$.subscribe((currentRoom) => { 
@@ -41,16 +36,12 @@ function MainApp() {
         });  
     }
     function createRoom(){ 
-      axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).
-        then((res) => {
-        console.log(res.data);
+      axios.post(apiUrl + '/NewRoom', {roomName: roomNameStr }, { 'Content-Type': 'application/json'}).then((res) => {
         setRoomList(res.data);
         setChatRoomCreatedMess(true);
         setChatRoomCreatedStr(res.statusText)
       });
-      getRoomtList();
-      console.log(roomList);
-      
+      getRoomtList();      
     }
   let pathNameFix = (pathName) => {
     let getPathName = pathName.split('=');
@@ -64,8 +55,7 @@ function MainApp() {
     let targetDelBtnId = e.target.id;
     let targetDelItemIndex = parseInt(e.target.dataset.index);
     axios.delete(apiUrl + '/RemoveRoom/' + targetDelBtnId
-    ).
-    then((res) => {});
+    ).then((res) => {});
     let newRoomList = [...roomList.slice(0, targetDelItemIndex), ...roomList.slice(targetDelItemIndex + 1)];
     setRoomList(newRoomList);
   }
