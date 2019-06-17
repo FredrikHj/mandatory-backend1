@@ -19,13 +19,8 @@ let countUserID = 0;
 let chatRooms = require('./server/ChatRooms.json');
 let roomId  = () => { 
     for (let index = 0; index < chatRooms.roomSetting.length; index++) {
-        console.log(index);
-           
         let idMax = chatRooms.roomSetting[index];
         countRoomID = idMax.id;
-
-        console.log('idMax');
-        console.log(countRoomID);
     }
     // Get the last id in my arr of movies
     countRoomID++;    
@@ -38,22 +33,22 @@ let intoRoomId  = () => {
     }
     // Get the last id in my arr of movies
     countMessID++;    
-    console.log('91');
-    console.log(countMessID);
     return countMessID; 
 };
-let messId  = (roomIndex) => { 
+let messId  = (roomIndex) => {
+    // Reset counter
+    countMessID = 0;
     for (let index = 0; index < chatRooms.chatRoomSetting[roomIndex].messegnes.length; index++) {
         let idMax = chatRooms.chatRoomSetting[roomIndex].messegnes[index];
         countMessID = idMax.id;
     }
     // Get the last id in my arr of movies
     countMessID++;    
-    console.log('91');
-    console.log(countMessID);
     return countMessID; 
 };
-let userTypedId  = (roomIndex) => { 
+let userTypedId  = (roomIndex) => {
+    // Reset counter
+    countUserID = 0;
     for (let index = 0; index < chatRooms.chatRoomSetting[roomIndex].userTyped.length; index++) {
         let idMax = chatRooms.chatRoomSetting[roomIndex].userTyped[index];
         countUserID = idMax.id;
@@ -63,7 +58,6 @@ let userTypedId  = (roomIndex) => {
     return countUserID;
 }
 // Create a new room =============================================================================
-
 app.post('/NewRoom', (req, res) => {
     // Create obj for roomSettings which I will save into the roomSetting key into the json file named chatRooms.json
     let roomSettingObj = {
@@ -78,42 +72,29 @@ app.post('/NewRoom', (req, res) => {
     };
     chatRooms.roomSetting.push(roomSettingObj);
     chatRooms.chatRoomSetting.push(chatRoomSettingObj);
-    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
-        , null, 2
-        ), function(err) {
-            console.log(err);     
+    fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging       , null, 2
+        ), function(err) {console.log(err);     
     });
 
-    console.log('46');
-    console.log(chatRooms);
     res.status(201).send(chatRooms.roomSetting);
 });
 
 // Show a list with all rooms =====================================================================
-app.get('/RoomList', (req, res) => {  
+app.get('/RoomList', (req, res) => {
     res.status(200).send(chatRooms.roomSetting);
 });
 
 // Creates a connection between the server and my client and listen for mess
 const io = socket(server);
-    
 io.on('connection', (socket) => {
     socket.on('join', function(roomNrStr) {
-        console.log('102');
-        console.log(roomNrStr);
-
         //Send all messegnes on the server in the joined room at once the client is open
         socket.join(roomNrStr);
 
         // Listen on newMessegnes and send it to all the client, create a  messId first
         io.to(roomNrStr).emit('messegnes', chatRooms);
-
         socket.on('newMessegnes', (data) => {
             let roomIndex = parseInt(roomNrStr)-1;
-            console.log('112');
-            console.log(data);
-            console.log('113');
-            console.log(roomIndex);
             
             // Datum och tid -------------------------------------------------------------------------------------------
             let fixDateTime = () => {
@@ -124,7 +105,6 @@ io.on('connection', (socket) => {
                 
                 // Visa månadens namn
                 var month = new Array();
-                
                 month[0] = "Januari";
                 month[1] = "Februari";
                 month[2] = "Mars";
@@ -159,11 +139,7 @@ io.on('connection', (socket) => {
                 usr: data.outUsr,
                 chatMess: data.outChatMess
             }
-            
-            console.log('158');
-            console.log(chatMessObj);
             // Push the new mes into its place
-
             chatRooms.chatRoomSetting[roomIndex].messegnes.push(chatMessObj);
             
             // Fix the userTyped list
@@ -177,16 +153,11 @@ io.on('connection', (socket) => {
             fileSystem.writeFile('./server/ChatRooms.json', JSON.stringify(chatRooms //debugging
                 , null, 2
                 ), function(err) {});       
-                
-
-            console.log(chatRooms.chatRoomSetting[roomIndex].messegnes.pop());
-            
+                            
             // Send the mess on server at once ther is any incommin mess from the client
             socket.
             //to(roomNrStr).
-            emit('newMessegnes', chatRooms.chatRoomSetting[roomIndex]              
-                //chatMessObj)
-                );
+            emit('newMessegnes', chatRooms.chatRoomSetting[roomIndex]);
             socket.leave(roomNrStr);
         });
     });
@@ -204,8 +175,6 @@ io.on('connection', (socket) => {
 app.delete('/RemoveRoom/:id', (req, res) => { 
     let incommingRoomIdStr = req.params.id;
     let incommingRoomIdNr = parseInt(incommingRoomIdStr);
-    console.log('198');
-    console.log(incommingRoomIdNr);
     
     // Verify if ID
     if (!incommingRoomIdNr) {
@@ -214,14 +183,38 @@ app.delete('/RemoveRoom/:id', (req, res) => {
     }
     // Remove the setting and the file for the room
     let indexToRemove = chatRooms.roomSetting.findIndex(roomIndex => parseInt(roomIndex.id) === incommingRoomIdNr);  
-    console.log('Delete room: ');
-    console.log(indexToRemove);
+
     if (indexToRemove !== -1) {
         // Remove the item in the list
         chatRooms.roomSetting.splice(indexToRemove, 1);
         chatRooms.chatRoomSetting.splice(indexToRemove, 1);
     }
     // Save the new room list back to its json file
+    fileSystem.writeFile('./server/chatRooms.json', JSON.stringify(chatRooms //debugging, null, 2
+        ), function(err) {
+            if (err) {
+                console.log(err);
+                res.status(204);
+                return;
+            }   
+    });
+    res.status(204).end();
+})
+// Delete a mess ==============================================
+app.delete('/RemoveMess/:id', (req, res) => { 
+    let incommingMessIndexNr = parseInt(req.params.id.split('=')[1]);
+    let incommingRoomIndexNr = parseInt(req.params.id.split('=')[0]-1);
+    // Verify if ID
+    if (!incommingMessIndexNr) {
+       res.status(400).end();
+       return;
+    }
+    let indexToRemove = chatRooms.chatRoomSetting[incommingRoomIndexNr].messegnes.findIndex(messIndex => parseInt(messIndex.id) === incommingMessIndexNr);
+    if (indexToRemove !== -1) {
+        // Remove the mess from the list
+        chatRooms.chatRoomSetting[incommingRoomIndexNr].messegnes.splice(indexToRemove, 1);
+    }
+    // Save the new messlist back to its json file
     fileSystem.writeFile('./server/chatRooms.json', JSON.stringify(chatRooms //debugging
         , null, 2
         ), function(err) {
@@ -231,45 +224,6 @@ app.delete('/RemoveRoom/:id', (req, res) => {
                 return;
             }   
     });
-            
-    res.status(204).end();
-})
-// Delete a mess ==============================================
-
-Arbetar = sista
-app.delete('/RemoveMess/:id', (req, res) => { 
-    console.log(req.params.id);
-    
-    let incommingMessIndexNr = parseInt(req.params.id.split('=')[1]);
-    console.log('142');
-    console.log(incommingMessIndexNr);
-    
-    // Verify if ID
-    if (!incommingMessIndexNr) {
-       res.status(400).end();
-       return;
-    }
-    let indexToRemove = chatRooms.chatRoomSetting.messegnes.findIndex(messIndex => parseInt(messIndex.id) === incommingMessIndexNr);
-    console.log('Delete mess: ');
-    console.log(indexToRemove);
-    if (indexToRemove !== -1) {
-        // Remove the mess from the list
-        chatRoomFileObj.messegnes.splice(indexToRemove, 1);
-        //chatRoomFileObj.messegnes.splice(indexToRemove, 1);
-        console.log('221');
-        console.log(chatRoomFileObj.messegnes);
-    }
-    // Save the new messlist back to its json file
-    fileSystem.writeFile('./server/rooms/' + chatRoomFile, JSON.stringify(chatRoomFileObj //debugging
-        , null, 2
-        ), function(err) {
-            if (err) {
-                console.log(err);
-                res.status(204);
-                return;
-            }   
-    });
-            
     res.status(204).end();
 })
 // ============================================================

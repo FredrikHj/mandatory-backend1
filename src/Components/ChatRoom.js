@@ -54,12 +54,6 @@ export class ChatRoom extends PureComponent {
         this.userTypedAdd(chatUserTyped);
       }
     });
-    this.listen.on('newMessegnes', res => {
-      console.log(res);
-
-      this.messegnesAdd(res.messegnes.pop());
-      this.userTypedAdd(res.userTyped.pop());
-    });
     this.listen.on('connection', function(){});
     
     // Tell server which room to join
@@ -107,7 +101,13 @@ export class ChatRoom extends PureComponent {
     this.listen.emit('newMessegnes', messBody, (data) => {
       console.log(data);
       
-      this.messegnesAdd(data);
+      //this.messegnesAdd(data);
+    });
+    this.listen.on('newMessegnes', res => {
+      console.log(res);
+
+      this.messegnesAdd(res.messegnes.pop());
+      this.userTypedAdd(res.userTyped.pop());
     });
   }
   changeUsrName = (e) => {       
@@ -152,8 +152,8 @@ export class ChatRoom extends PureComponent {
     
     let targetDelBtInRoomId = e.target.dataset.room;
     let targetDelBntMessId = e.target.id;
-    
-     axios.delete(this.props.apiUrl + '/RemoveMess/' + targetDelBtInRoomId + '=' + targetDelBntMessId
+
+    axios.delete(this.props.apiUrl + '/RemoveMess/' +  targetDelBtInRoomId + '=' + targetDelBntMessId
     ).
     then((res) => {});
     let newMessList = [...this.state.incommingMess.slice(0, targetDelBntMessIndex), ...this.state.incommingMess.slice(targetDelBntMessIndex + 1)];
